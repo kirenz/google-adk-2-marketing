@@ -366,11 +366,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="übertragen-auf-das-eigene-unternehmen" class="level2">
 <h2 class="anchored" data-anchor-id="übertragen-auf-das-eigene-unternehmen">Übertragen auf das eigene Unternehmen</h2>
 <p>Der eigene Agent folgt demselben Muster, in drei Aufträgen an den Coding-Agenten. Vor jedem Auftrag lohnt ein Commit, damit sich ein misslungener Schritt zurücknehmen lässt.</p>
-<p><strong>1. Daten.</strong> In den Ordner <code>daten</code> kommt eine Datei <code>kampagne.csv</code> mit einer Zeile je Kanal und diesen Spalten:</p>
+<p><span id="eigene-daten"><strong>1. Daten.</strong></span> In den Ordner <code>daten</code> kommt eine Datei <code>kampagne.csv</code> mit einer Zeile je Kanal und diesen Spalten:</p>
 <pre class="text"><code>kanal,kosten_eur,impressionen,klicks,abschluesse
 Newsletter,120,8000,320,24
 Instagram,250,90000,900,30</code></pre>
-<p><code>abschluesse</code> ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Für das zweite Werkzeug im Kurs (ROAS, also Umsatz ÷ Werbekosten) kommt später eine Spalte <code>umsatz_eur</code> dazu. Wer mag, legt sie schon jetzt an, das Werkzeug aus diesem Kapitel ignoriert sie. Echte Kampagnenzahlen sind bei einem fremden Unternehmen nicht öffentlich. Dann werden plausible Zahlen erfunden, und in <code>kontext/unternehmen.md</code> steht dazu ein Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind erfunden.“</p>
+<p><code>abschluesse</code> ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Für das zweite Werkzeug im Kurs (ROAS, also Umsatz ÷ Werbekosten) kommt später eine Spalte <code>umsatz_eur</code> dazu. Wer mag, legt sie schon jetzt an, das Werkzeug aus diesem Kapitel ignoriert sie. Bei einem erfundenen Unternehmen legen Sie die Zahlen selbst fest. Bei einem echten Unternehmen sind Kampagnenzahlen meist nicht öffentlich. Dann tragen Sie plausible Schätzungen ein und schreiben in <code>kontext/unternehmen.md</code> einen Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind geschätzt.“</p>
 <p><strong>2. Werkzeug.</strong></p>
 <blockquote class="blockquote">
 <p>Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py unter tools ein. Ändere sonst nichts.</p>
