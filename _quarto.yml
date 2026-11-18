@@ -29,6 +29,7 @@ book:
     - index.qmd
     - kapitel/01-erster-agent.qmd
     - kapitel/02-workflow.qmd
+    - kapitel/03-webdienst.qmd
 
 format:
   html:

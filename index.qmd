@@ -21,11 +21,12 @@ Die Gründerin hält Instagram für den besseren Kanal, weil der Klick nur 0,18 
 |---|---|---|
 | 1 | [Der erste Agent mit einem Werkzeug](kapitel/01-erster-agent.qmd) | fertig |
 | 2 | [Ein Workflow aus festen Schritten](kapitel/02-workflow.qmd) | fertig |
-| 3 | Der Agent als App mit Gradio | folgt |
-| 4 | Ergebnisse prüfen | folgt |
+| 3 | [Ein Werkzeug, das einen Webdienst abfragt](kapitel/03-webdienst.qmd) | fertig |
+| 4 | Der Agent als App mit Gradio | folgt |
+| 5 | Ergebnisse prüfen | folgt |
 
 ## Start
 
-**Im Kurs Generative AI & Web Analytics** wird ausschließlich im eigenen Projektordner `gwa26-agent-<nachname>` gearbeitet. Die Morgenrot-Beispiele in diesem Buch sind zum Lesen, Dateien und Daten legen Sie im eigenen Projekt selbst an. Wie er startklar wird, steht auf der Seite [Einrichtung](https://kirenz.github.io/genai-web-analytics-ws2627/einrichtung.html#adk) des Kurses, die Schritte mit empfohlenen Daten auf der Seite [Semesterprojekt](https://kirenz.github.io/genai-web-analytics-ws2627/projekt.html). Jedes Kapitel zeigt zuerst das Morgenrot-Beispiel zum Lesen und überträgt es dann mit Aufträgen an den Coding-Agenten auf das eigene Unternehmen. Wer feststeckt, bucht einen [Besprechungstermin](https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J) (15 Minuten, online über Google Meet).
+**Im Kurs Generative AI & Web Analytics** arbeiten Sie im eigenen Projektordner `gwa26-agent-<nachname>`. Wie er startklar wird, steht auf der Seite [Einrichtung](https://kirenz.github.io/genai-web-analytics-ws2627/einrichtung.html#adk) des Kurses, die Schritte mit empfohlenen Daten auf der Seite [Semesterprojekt](https://kirenz.github.io/genai-web-analytics-ws2627/projekt.html). Jedes Kapitel zeigt zuerst das Morgenrot-Beispiel zum Lesen und überträgt es dann mit Aufträgen an den Coding-Agenten auf das eigene Unternehmen. Wer feststeckt, bucht einen [Besprechungstermin](https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J) (15 Minuten, online über Google Meet).
 
 Die Beispiele nutzen google-adk 2.13.0 und Python 3.13. Im eigenen Projekt installiert `uv add google-adk` die aktuelle Version, die Befehle im Buch funktionieren damit genauso.
