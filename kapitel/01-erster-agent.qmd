@@ -1,0 +1,126 @@
+# Der erste Agent mit einem Werkzeug
+
+Die Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung günstiger bringt. Ein Chat mit einem Sprachmodell würde die Kennzahlen aus der Tabelle abschreiben und im Kopf rechnen, mal richtig, mal knapp daneben. Der Agent in diesem Kapitel rechnet nicht selbst. Er ruft eine Python-Funktion auf, die die Datei liest und die Kennzahlen berechnet, und formuliert aus dem Ergebnis die Antwort.
+
+## Drei Teile eines Agenten
+
+Ein Agent in Google ADK besteht aus drei Teilen. Das **Modell** (hier Gemini) versteht die Frage und schreibt die Antwort. Die **Instruction** legt fest, welche Rolle der Agent hat, welche Regeln gelten und wie die Ausgabe aussieht. Die **Werkzeuge** sind Python-Funktionen, die der Agent aufrufen darf.
+
+```{mermaid}
+flowchart LR
+  F["Frage<br/>Was kostet eine Reservierung<br/>über Instagram?"] --> M["Modell<br/>entscheidet: Werkzeug nötig"]
+  M --> W["Werkzeug kennzahlen<br/>liest daten/kampagne.csv<br/>und rechnet"]
+  W --> M2["Modell<br/>formuliert die Antwort<br/>aus der Rückgabe"]
+  M2 --> A["Antwort mit Tabelle<br/>und Quelle"]
+```
+
+Wichtig ist die Arbeitsteilung: Das Modell entscheidet, ob und mit welchem Argument ein Werkzeug aufgerufen wird. Was dabei herauskommt, bestimmt allein der Python-Code. Eine falsche Formel im Werkzeug liefert also zuverlässig falsche Zahlen, und eine gute Instruction rettet das nicht.
+
+## Der Projektordner
+
+```text
+google-adk-2-marketing/
+├── .env                     API-Schlüssel, nie committen
+├── daten/
+│   └── kampagne.csv         Kosten, Impressionen, Klicks, Reservierungen je Kanal
+└── beispiele/
+    └── morgenrot_agent/
+        ├── __init__.py      macht den Ordner für ADK auffindbar
+        ├── agent.py         root_agent mit Instruction und Werkzeugen
+        └── tools.py         die Werkzeuge als Python-Funktionen
+```
+
+ADK sucht in jedem Unterordner von `beispiele` nach einer Variablen `root_agent`. Der Ordnername ist der Name, unter dem der Agent später in der Oberfläche erscheint. Fehlt `__init__.py`, taucht der Agent dort nicht auf.
+
+## Das Werkzeug: eine Funktion mit Beschreibung
+
+Ein Werkzeug ist eine gewöhnliche Python-Funktion. Das Modell sieht ihren Code nicht. Es sieht nur den Namen, die Parameter mit ihren Typen und den Docstring, also den Text in den dreifachen Anführungszeichen. Daraus schließt es, wann die Funktion passt und welches Argument sie braucht. Der Docstring ist deshalb kein Kommentar für Menschen, sondern die Bedienungsanleitung für das Modell.
+
+```python
+def kennzahlen(kanal: str) -> dict:
+    """Berechnet die Kennzahlen eines Werbekanals aus daten/kampagne.csv.
+
+    Args:
+        kanal: Name des Kanals, genau wie in der Spalte kanal,
+            z. B. "Suchanzeigen" oder "Instagram".
+
+    Returns:
+        Ein Dictionary mit Klickrate (CTR) und Conversion-Rate in Prozent,
+        Klickpreis (CPC) und Kosten je Reservierung in Euro. Ist der Kanal
+        unbekannt, enthält es den Schlüssel "fehler" und die Liste der
+        vorhandenen Kanäle.
+    """
+```
+
+Der Rumpf der Funktion liest die Zeile des Kanals und rechnet mit den bekannten Formeln: Klickrate = Klicks ÷ Impressionen, Klickpreis = Kosten ÷ Klicks, Conversion-Rate = Reservierungen ÷ Klicks, Kosten je Reservierung = Kosten ÷ Reservierungen. Zurück kommt ein Dictionary mit den Werten und der Quelle. Für einen unbekannten Kanal gibt die Funktion keine erfundene Zahl zurück, sondern eine Fehlermeldung mit den vorhandenen Kanälen. So kann der Agent nachfragen, statt zu raten. Der vollständige Code steht in `beispiele/morgenrot_agent/tools.py`.
+
+## Der Agent: Instruction als prüfbare Regeln
+
+```python
+root_agent = Agent(
+    name="morgenrot_agent",
+    model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"),
+    description="Wertet die Werbekanäle der Rösterei Morgenrot aus.",
+    instruction="""
+Rolle: Du unterstützt die Gründerinnen der Rösterei Morgenrot
+(Kaffee-Abo, 27 Euro je Lieferung) bei der Auswertung ihrer Werbung.
+Aufgabe: Beantworte Fragen zu den Kanälen Suchanzeigen und Instagram.
+Regeln:
+- Rechne nie selbst. Rufe für jede Kennzahl das Werkzeug kennzahlen auf.
+- Nutze nur Zahlen aus der Rückgabe des Werkzeugs. Fehlt eine Zahl, sage das.
+- Kennzeichne jede eigene Einschätzung mit „Annahme:“.
+Ausgabe: höchstens fünf Sätze, danach eine Tabelle mit den Kennzahlen
+und die Quelle aus der Rückgabe.
+""",
+    tools=[kennzahlen],
+)
+```
+
+`tools=[kennzahlen]` trägt die Funktion als Werkzeug ein. Ohne diesen Eintrag kennt der Agent sie nicht, auch wenn sie in `tools.py` steht.
+
+Die Instruction hat vier Teile: Rolle, Aufgabe, Regeln, Ausgabe. „Sei hilfreich“ wäre keine Regel, weil sich nicht prüfen lässt, ob sie eingehalten wurde. „Rechne nie selbst, rufe das Werkzeug auf“ lässt sich dagegen an jedem Lauf prüfen: Entweder taucht der Werkzeugaufruf auf oder nicht. Gute Regeln sind so formuliert, dass eine zweite Person sie ohne Rückfrage abhaken kann.
+
+## Starten und beobachten
+
+```bash
+uv run adk web beispiele
+```
+
+Das Terminal zeigt eine lokale Adresse, meist `http://127.0.0.1:8000`. Dort oben links `morgenrot_agent` wählen und fragen: „Welcher Kanal bringt eine Reservierung günstiger?“ Gestoppt wird der Server im Terminal mit Ctrl + C.
+
+Die Antwort allein beweist nichts. Links in der Oberfläche steht unter **Events** jeder Schritt des Laufs. Dort lässt sich prüfen, ob `kennzahlen` aufgerufen wurde, mit welchem Argument und was zurückkam. Erwartet werden zwei Aufrufe, einer je Kanal, und diese Werte:
+
+| Kanal | Klickrate | Klickpreis | Conversion-Rate | Kosten je Reservierung |
+|---|---:|---:|---:|---:|
+| Suchanzeigen | 4,0 % | 0,60 € | 12,5 % | 4,80 € |
+| Instagram | 0,8 % | 0,18 € | 4,25 % | 4,24 € |
+
+Instagram ist je Reservierung knapp günstiger, obwohl die Conversion-Rate dreimal schlechter ist. Der billige Klick gleicht das hier gerade noch aus. Ob aus einer Reservierung ein bezahltes Abo wird, zeigen diese Daten nicht.
+
+## Übung: drei Fragen, drei Beobachtungen
+
+Für jede der drei Fragen wird festgehalten: die Frage, ob das Werkzeug aufgerufen wurde und mit welchem Argument, die Antwort und ein Urteil, ob die Antwort zur Rückgabe passt.
+
+1. „Wie hoch ist die Klickrate bei Instagram?“ Erwartet: ein Aufruf mit `Instagram`, Antwort 0,8 Prozent.
+2. „Wie läuft TikTok?“ Erwartet: ein Aufruf mit `TikTok`, die Rückgabe enthält einen Fehler, und der Agent sagt, dass es dazu keine Daten gibt, statt Zahlen zu erfinden.
+3. „Was wäre der Klickpreis bei Instagram, wenn die Kosten 300 Euro betragen hätten?“ Das Werkzeug kennt nur die tatsächlichen Kosten. Hier zeigt sich, ob der Agent die Regel „Rechne nie selbst“ einhält oder doch im Kopf rechnet.
+
+**Prüfen:** Jede Beobachtung trennt, was im Event-Protokoll steht, von dem, was in der Antwort behauptet wird. Ein Screenshot einer überzeugenden Antwort ohne Werkzeugaufruf ist kein Beleg. Bei Frage 3 ist beides ein Ergebnis: Hält der Agent sich an die Regel, ist die Instruction stark genug. Rechnet er trotzdem, gehört eine schärfere Regel in die Instruction, etwa „Für hypothetische Zahlen gibt es kein Werkzeug. Sage, dass diese Rechnung nicht möglich ist.“
+
+## Übertragen auf ein eigenes Unternehmen
+
+Der eigene Agent folgt demselben Muster. Zuerst kommt eine CSV-Datei mit den Zahlen des eigenen Unternehmens in den Ordner `daten`, bei einem erfundenen Unternehmen mit dem Vermerk, dass die Zahlen erfunden sind. Danach erhält der Coding-Agent einen Auftrag wie diesen:
+
+> Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in agent.py unter tools ein. Ändere sonst nichts.
+
+**Prüfen:** Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft.
+
+## Häufige Fehler
+
+**Der Agent erscheint nicht in der Liste.** Im Agentenordner fehlt `__init__.py`, oder `adk web` wurde im falschen Ordner gestartet. Der Befehl braucht den Ordner, der die Agentenordner enthält.
+
+**Der Agent ruft das Werkzeug nie auf.** Meist fehlt der Eintrag in `tools=[...]`, oder der Docstring beschreibt nicht, wofür die Funktion da ist. Eine Regel in der Instruction, die das Werkzeug beim Namen nennt, hilft zusätzlich.
+
+**Fehlermeldung zum API-Schlüssel.** Die Datei `.env` fehlt, liegt im falschen Ordner oder enthält noch den Platzhalter.
+
+**Die Zahlen stimmen nicht.** Dann liegt der Fehler im Python-Code, nicht beim Modell. Die Funktion lässt sich ohne Modell testen, im Beispiel mit `uv run pytest`.

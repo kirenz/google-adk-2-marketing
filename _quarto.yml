@@ -1,0 +1,37 @@
+project:
+  type: book
+  output-dir: _book
+  resources:
+    - daten/*.csv
+    - beispiele/**/*.py
+    - .env.example
+    - pyproject.toml
+    - uv.lock
+  preview:
+    port: 4203
+    browser: false
+
+lang: de
+execute:
+  enabled: false
+
+book:
+  title: "Google ADK 2 im Marketing"
+  subtitle: "Agenten, Werkzeuge und Workflows am Fall Morgenrot"
+  author: "Jan Kirenz"
+  repo-url: https://github.com/kirenz/google-adk-2-marketing
+  repo-actions: [source, issue]
+  search: true
+  page-footer:
+    left: "© Jan Kirenz, 2026"
+    right: "Python · Google ADK 2 · uv"
+  chapters:
+    - index.qmd
+    - kapitel/01-erster-agent.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    number-sections: false

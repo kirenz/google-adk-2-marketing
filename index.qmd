@@ -1,0 +1,40 @@
+# Worum es geht {.unnumbered}
+
+Ein Sprachmodell schreibt gute Texte, rechnet aber unzuverlässig und kennt die Zahlen eines Unternehmens nicht. Ein Agent schließt diese Lücke. Er verbindet das Modell mit Regeln (der Instruction) und mit Werkzeugen, also Python-Funktionen, die Daten lesen und rechnen. Das Modell entscheidet, wann ein Werkzeug gebraucht wird. Gerechnet wird in Python.
+
+Dieses Buch baut solche Agenten mit Google ADK 2, dem Agent Development Kit von Google, Schritt für Schritt an einem Marketingfall. Jedes Kapitel hat ein lauffähiges Beispiel und eine Übung, die das Beispiel auf ein eigenes Unternehmen überträgt. Programmierkenntnisse sind keine Voraussetzung: Den Code schreibt ein Coding-Agent wie Antigravity, die Aufgabe ist, ihn zu verstehen, Aufträge zu geben und Ergebnisse zu prüfen.
+
+## Der Fall: Rösterei Morgenrot
+
+Zwei Gründerinnen verkaufen frisch gerösteten Kaffee im Abo, eine Lieferung kostet 27 Euro. Vor dem Start haben sie sechs Wochen lang Suchanzeigen und Instagram getestet. Die Zahlen liegen in `daten/kampagne.csv` und sind erfunden.
+
+| Kanal | Kosten | Impressionen | Klicks | Reservierungen |
+|---|---:|---:|---:|---:|
+| Suchanzeigen | 384 € | 16.000 | 640 | 80 |
+| Instagram | 216 € | 150.000 | 1.200 | 51 |
+
+Die Gründerin hält Instagram für den besseren Kanal, weil der Klick nur 0,18 Euro kostet. Die Mitgründerin will Zahlen sehen, bevor mehr Geld fließt. Der Agent in diesem Buch hilft bei genau dieser Frage.
+
+## Die Kapitel
+
+| Kapitel | Inhalt | Stand |
+|---|---|---|
+| 1 | [Der erste Agent mit einem Werkzeug](kapitel/01-erster-agent.qmd) | fertig |
+| 2 | Ein Workflow aus festen Schritten | folgt |
+| 3 | Der Agent als App mit Gradio | folgt |
+| 4 | Ergebnisse prüfen | folgt |
+
+## Start
+
+Voraussetzungen sind [uv](https://docs.astral.sh/uv/getting-started/installation/), Git und ein eigener Gemini-API-Schlüssel aus [Google AI Studio](https://aistudio.google.com/apikey). Alle Befehle laufen im Ordner des Repositorys:
+
+```bash
+git clone https://github.com/kirenz/google-adk-2-marketing.git
+cd google-adk-2-marketing
+uv sync
+cp .env.example .env
+```
+
+In der Datei `.env` ersetzt der eigene Schlüssel den Platzhalter. Die Datei steht in `.gitignore` und gehört nie in ein Repository. `uv run pytest` prüft danach ohne Schlüssel, ob die Werkzeuge richtig rechnen.
+
+Das Buch nutzt google-adk 2.13.0 und Python 3.13, beides legt `uv.lock` fest. Eine englische, technisch ausführlichere Fassung mit einem BI-Fall ist [Google ADK 2](https://kirenz.github.io/google-adk-2/).
