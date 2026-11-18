@@ -22,6 +22,7 @@ Beides lässt sich verbinden: Ein Workflow kann einen Agenten als Schritt enthal
 Ein Workflow besteht aus **Knoten** und **Kanten**. Ein Knoten ist ein Schritt, hier eine Python-Funktion. Eine Kante legt fest, welcher Schritt danach kommt. Was eine Funktion zurückgibt, bekommt der nächste Schritt als Eingabe `node_input`.
 
 ```{mermaid}
+%%{init: {"themeVariables": {"fontSize": "18px"}}}%%
 flowchart LR
   S[START] --> L["laden<br/>CSV-Zeilen"]
   L --> R["rechnen<br/>Kennzahlen je Kanal"]
