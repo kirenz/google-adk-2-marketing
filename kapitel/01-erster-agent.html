@@ -181,6 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#vorher-das-projekt-ist-startklar" id="toc-vorher-das-projekt-ist-startklar" class="nav-link active" data-scroll-target="#vorher-das-projekt-ist-startklar">Vorher: das Projekt ist startklar</a></li>
+  <li><a href="#ordner-und-dateien-anlegen" id="toc-ordner-und-dateien-anlegen" class="nav-link" data-scroll-target="#ordner-und-dateien-anlegen">Ordner und Dateien anlegen</a></li>
   <li><a href="#drei-teile-eines-agenten" id="toc-drei-teile-eines-agenten" class="nav-link" data-scroll-target="#drei-teile-eines-agenten">Drei Teile eines Agenten</a></li>
   <li><a href="#der-projektordner" id="toc-der-projektordner" class="nav-link" data-scroll-target="#der-projektordner">Der Projektordner</a></li>
   <li><a href="#das-werkzeug-eine-funktion-mit-beschreibung" id="toc-das-werkzeug-eine-funktion-mit-beschreibung" class="nav-link" data-scroll-target="#das-werkzeug-eine-funktion-mit-beschreibung">Das Werkzeug: eine Funktion mit Beschreibung</a></li>
@@ -225,8 +226,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Ein Agentenordner existiert, angelegt mit <code>uv run adk create my_agent</code>. Darin liegen <code>__init__.py</code>, <code>agent.py</code> und <code>.env</code> mit dem eigenen Schlüssel.</li>
 <li><code>uv run adk web</code> startet, und der Agent antwortet auf „Hallo!“.</li>
 <li>Die Datei <code>.gitignore</code> enthält <code>.env</code> und <code>.venv</code>, das Projekt liegt in einem privaten GitHub-Repository.</li>
-<li>Die Dateien in <code>kontext</code> und <code>AGENTS.md</code> sind ausgefüllt (Schritt „Kontext und Regeln“ auf der Projektseite des Kurses).</li>
+<li>Die Ordner <code>kontext</code>, <code>daten</code> und <code>ergebnisse</code> und die Datei <code>AGENTS.md</code> sind angelegt, die Dateien in <code>kontext</code> und <code>AGENTS.md</code> sind ausgefüllt.</li>
 </ul>
+</section>
+<section id="ordner-und-dateien-anlegen" class="level2">
+<h2 class="anchored" data-anchor-id="ordner-und-dateien-anlegen">Ordner und Dateien anlegen</h2>
+<p>Diese Ordner und Dateien legen Sie selbst an, alle direkt im Projektordner, also auf derselben Ebene wie <code>my_agent</code>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Was</th>
+<th>Wo</th>
+<th>Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ordner <code>kontext</code></td>
+<td>Projektordner</td>
+<td>die Dateien <code>unternehmen.md</code>, <code>zielgruppe.md</code>, <code>positionierung.md</code> und <code>aarrr-stufe.md</code> mit den Angaben zum eigenen Unternehmen</td>
+</tr>
+<tr class="even">
+<td>Ordner <code>daten</code></td>
+<td>Projektordner</td>
+<td>die Datei <code>kampagne.csv</code> mit den Kampagnenzahlen, siehe Abschnitt <a href="#eigene-daten">Übertragen auf das eigene Unternehmen</a></td>
+</tr>
+<tr class="odd">
+<td>Ordner <code>ergebnisse</code></td>
+<td>Projektordner</td>
+<td>später die Beobachtungen und Läufe des Agenten</td>
+</tr>
+<tr class="even">
+<td>Datei <code>AGENTS.md</code></td>
+<td>Projektordner</td>
+<td>eine kurze Beschreibung des Unternehmens und mindestens fünf prüfbare Regeln, darunter „Nutze nur Fakten aus dem Ordner kontext und aus den Rückgaben der Werkzeuge.“ und „Kennzeichne Annahmen mit ‚Annahme:’.“</td>
+</tr>
+</tbody>
+</table>
+<p>Die Ordner entstehen am schnellsten im Terminal der IDE, das im Projektordner steht:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> kontext daten ergebnisse</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Alternativ im Explorer der IDE (links) über das Symbol „Neuer Ordner“. Dateien entstehen im Explorer über „Neue Datei“ oder mit einem Auftrag an den Coding-Agenten:</p>
+<blockquote class="blockquote">
+<p>Lege im Projektordner die Datei AGENTS.md mit den Überschriften „Unternehmen“ und „Regeln“ an und im Ordner kontext die Dateien unternehmen.md, zielgruppe.md, positionierung.md und aarrr-stufe.md mit je einer Überschrift. Ändere sonst nichts.</p>
+</blockquote>
+<p>Was in die Dateien gehört, steht mit Beispielen auf der <a href="https://kirenz.github.io/genai-web-analytics-ws2627/projekt.html#kontext">Projektseite</a> des Kurses.</p>
+<p><strong>Prüfen:</strong> Im Explorer stehen <code>kontext</code>, <code>daten</code>, <code>ergebnisse</code> und <code>AGENTS.md</code> auf derselben Ebene wie <code>my_agent</code>, nicht darin.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -237,7 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Das Morgenrot-Beispiel liegt im Repository dieses Buchs, nicht im eigenen Projektordner. Der Code, der zum Verstehen nötig ist, steht vollständig im Kapitel. Gebaut und ausprobiert wird nur im eigenen Projekt, ab dem Abschnitt „Übertragen auf das eigene Unternehmen“.</p>
+<p>Der Code des Morgenrot-Beispiels steht vollständig im Kapitel. Sie bauen ihn ab dem Abschnitt „Übertragen auf das eigene Unternehmen“ in Ihrem eigenen Projekt nach.</p>
 </div>
 </div>
 </section>
@@ -249,7 +293,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <p></p><figure class="figure"><p></p>
 <div>
-<pre class="mermaid mermaid-js">flowchart LR
+<pre class="mermaid mermaid-js">%%{init: {"themeVariables": {"fontSize": "18px"}}}%%
+flowchart TD
   F["Frage&lt;br/&gt;Was kostet eine Reservierung&lt;br/&gt;über Instagram?"] --&gt; M["Modell&lt;br/&gt;entscheidet: Werkzeug nötig"]
   M --&gt; W["Werkzeug kennzahlen&lt;br/&gt;liest daten/kampagne.csv&lt;br/&gt;und rechnet"]
   W --&gt; M2["Modell&lt;br/&gt;formuliert die Antwort&lt;br/&gt;aus der Rückgabe"]
@@ -280,50 +325,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="das-werkzeug-eine-funktion-mit-beschreibung" class="level2">
 <h2 class="anchored" data-anchor-id="das-werkzeug-eine-funktion-mit-beschreibung">Das Werkzeug: eine Funktion mit Beschreibung</h2>
 <p>Ein Werkzeug ist eine gewöhnliche Python-Funktion. Das Modell sieht ihren Code nicht. Es sieht nur den Namen, die Parameter mit ihren Typen und den Docstring, also den Text in den dreifachen Anführungszeichen. Daraus schließt es, wann die Funktion passt und welches Argument sie braucht. Der Docstring ist deshalb kein Kommentar für Menschen, sondern die Bedienungsanleitung für das Modell.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> kennzahlen(kanal: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Berechnet die Kennzahlen eines Werbekanals aus daten/kampagne.csv.</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">        kanal: Name des Kanals, genau wie in der Spalte kanal,</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">            z. B. "Suchanzeigen" oder "Instagram".</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">        Ein Dictionary mit Klickrate (CTR) und Conversion-Rate in Prozent,</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">        Klickpreis (CPC) und Kosten je Reservierung in Euro. Ist der Kanal</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">        unbekannt, enthält es den Schlüssel "fehler" und die Liste der</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">        vorhandenen Kanäle.</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> kennzahlen(kanal: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Berechnet die Kennzahlen eines Werbekanals aus daten/kampagne.csv.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">        kanal: Name des Kanals, genau wie in der Spalte kanal,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">            z. B. "Suchanzeigen" oder "Instagram".</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">        Ein Dictionary mit Klickrate (CTR) und Conversion-Rate in Prozent,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">        Klickpreis (CPC) und Kosten je Reservierung in Euro. Ist der Kanal</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">        unbekannt, enthält es den Schlüssel "fehler" und die Liste der</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">        vorhandenen Kanäle.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Der Rumpf der Funktion liest die Zeile des Kanals und rechnet mit den bekannten Formeln: Klickrate = Klicks ÷ Impressionen, Klickpreis = Kosten ÷ Klicks, Conversion-Rate = Reservierungen ÷ Klicks, Kosten je Reservierung = Kosten ÷ Reservierungen. Zurück kommt ein Dictionary mit den Werten und der Quelle. Für einen unbekannten Kanal gibt die Funktion keine erfundene Zahl zurück, sondern eine Fehlermeldung mit den vorhandenen Kanälen. So kann der Agent nachfragen, statt zu raten.</p>
 </section>
 <section id="der-agent-instruction-aus-kontext-und-regeln" class="level2">
 <h2 class="anchored" data-anchor-id="der-agent-instruction-aus-kontext-und-regeln">Der Agent: Instruction aus Kontext und Regeln</h2>
 <p>Die Instruction sagt dem Modell, wer es ist, was es tun soll und woran es sich hält. Damit der Agent das eigene Unternehmen kennt, kommt der Inhalt der Kontextdateien und der <code>AGENTS.md</code> direkt in die Instruction. Der Agent liest diese Dateien nicht von selbst. Der Coding-Agent in der IDE liest <code>AGENTS.md</code> zwar automatisch, der eigene ADK-Agent aber nur das, was im Code steht. Eine kleine Funktion <code>lies</code> holt deshalb den Text beim Start aus den Dateien:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>PROJEKT <span class="op">=</span> Path(<span class="va">__file__</span>).resolve().parents[<span class="dv">1</span>]  <span class="co"># Ordner über my_agent</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lies(pfad: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (PROJEKT <span class="op">/</span> pfad).read_text(encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>root_agent <span class="op">=</span> Agent(</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"morgenrot_agent"</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>os.getenv(<span class="st">"GEMINI_MODEL"</span>, <span class="st">"gemini-flash-latest"</span>),</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Wertet die Werbekanäle der Rösterei Morgenrot aus."</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    instruction<span class="op">=</span><span class="ss">f"""</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ss">Rolle: Du unterstützt die Gründerinnen der Rösterei Morgenrot</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ss">bei der Auswertung ihrer Werbung.</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ss">Aufgabe: Beantworte Fragen zu den Werbekanälen.</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="ss">Werkzeug: Rechne nie selbst. Rufe für jede Kennzahl das Werkzeug</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="ss">kennzahlen auf.</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ss">Ausgabe: höchstens fünf Sätze, danach eine Tabelle mit den Kennzahlen</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="ss">und die Quelle aus der Rückgabe.</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"kontext/unternehmen.md"</span>)<span class="sc">}</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"kontext/zielgruppe.md"</span>)<span class="sc">}</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"AGENTS.md"</span>)<span class="sc">}</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    tools<span class="op">=</span>[kennzahlen],</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>PROJEKT <span class="op">=</span> Path(<span class="va">__file__</span>).resolve().parents[<span class="dv">1</span>]  <span class="co"># Ordner über my_agent</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lies(pfad: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (PROJEKT <span class="op">/</span> pfad).read_text(encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>root_agent <span class="op">=</span> Agent(</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"morgenrot_agent"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>os.getenv(<span class="st">"GEMINI_MODEL"</span>, <span class="st">"gemini-flash-latest"</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Wertet die Werbekanäle der Rösterei Morgenrot aus."</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    instruction<span class="op">=</span><span class="ss">f"""</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="ss">Rolle: Du unterstützt die Gründerinnen der Rösterei Morgenrot</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ss">bei der Auswertung ihrer Werbung.</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="ss">Aufgabe: Beantworte Fragen zu den Werbekanälen.</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="ss">Werkzeug: Rechne nie selbst. Rufe für jede Kennzahl das Werkzeug</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="ss">kennzahlen auf.</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="ss">Ausgabe: höchstens fünf Sätze, danach eine Tabelle mit den Kennzahlen</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="ss">und die Quelle aus der Rückgabe.</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"kontext/unternehmen.md"</span>)<span class="sc">}</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"kontext/zielgruppe.md"</span>)<span class="sc">}</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"AGENTS.md"</span>)<span class="sc">}</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>,</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    tools<span class="op">=</span>[kennzahlen],</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Das <code>f</code> vor den Anführungszeichen macht aus dem Text einen f-String: An den Stellen in geschweiften Klammern setzt Python beim Start den Inhalt der Dateien ein. Ändert sich <code>unternehmen.md</code>, genügt ein Neustart von <code>adk web</code>, am Code ändert sich nichts.</p>
 <p>In der <code>AGENTS.md</code> von Morgenrot stehen fünf Regeln, darunter „Nutze nur Fakten aus den Dateien im Ordner kontext und aus den Rückgaben der Werkzeuge“ und „Kennzeichne jede eigene Einschätzung mit ‚Annahme:’“. Die Regel zum Werkzeug steht direkt in der Instruction, weil sie nur für diesen Agenten gilt. <code>tools=[kennzahlen]</code> trägt die Funktion als Werkzeug ein. Ohne diesen Eintrag kennt der Agent sie nicht, auch wenn sie in <code>tools.py</code> steht.</p>
 <p>Die Instruction hat damit vier Teile: Rolle, Aufgabe, Regeln, Ausgabe. „Sei hilfreich“ wäre keine Regel, weil sich nicht prüfen lässt, ob sie eingehalten wurde. „Rechne nie selbst, rufe das Werkzeug auf“ lässt sich dagegen an jedem Lauf prüfen: Entweder taucht der Werkzeugaufruf auf oder nicht. Gute Regeln sind so formuliert, dass eine zweite Person sie ohne Rückfrage abhaken kann.</p>
@@ -371,7 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="übertragen-auf-das-eigene-unternehmen" class="level2">
 <h2 class="anchored" data-anchor-id="übertragen-auf-das-eigene-unternehmen">Übertragen auf das eigene Unternehmen</h2>
 <p>Der eigene Agent folgt demselben Muster, in drei Aufträgen an den Coding-Agenten. Vor jedem Auftrag lohnt ein Commit, damit sich ein misslungener Schritt zurücknehmen lässt.</p>
-<p><span id="eigene-daten"><strong>1. Daten.</strong></span> In den Ordner <code>daten</code> kommt eine Datei <code>kampagne.csv</code> mit einer Zeile je Kanal und diesen Spalten:</p>
+<p><span id="eigene-daten"><strong>1. Daten.</strong></span> In den Ordner <code>daten</code> kommt eine neue Datei <code>kampagne.csv</code> (im Explorer der IDE: Rechtsklick auf <code>daten</code>, „Neue Datei“) mit einer Zeile je Kanal und diesen Spalten:</p>
 <pre class="text"><code>kanal,kosten_eur,impressionen,klicks,abschluesse
 Newsletter,120,8000,320,24
 Instagram,250,90000,900,30</code></pre>
