@@ -76,7 +76,7 @@ Der Dienst muss nicht Nager.Date sein. Er muss kostenfrei sein, ohne API-Schlüs
 | Dienst | Adresse (Beispiel) | Passt für |
 |---|---|---|
 | Open-Meteo, Wetter | `https://api.open-meteo.com/v1/forecast?latitude=48.78&longitude=9.18&daily=temperature_2m_max&timezone=Europe/Berlin` | saisonale Angebote, Außengastronomie, Veranstaltungen |
-| Frankfurter, EZB-Wechselkurse | `https://api.frankfurter.app/latest?from=EUR&to=USD,CHF` | Preise und Budgets in anderen Währungen |
+| Frankfurter, EZB-Wechselkurse | `https://api.frankfurter.dev/v1/latest?from=EUR&to=USD,CHF` | Preise und Budgets in anderen Währungen |
 
 **1. Dienst prüfen.** Die Adresse im Browser öffnen. Kommt JSON zurück, ohne dass eine Anmeldung verlangt wird, passt der Dienst.
 
