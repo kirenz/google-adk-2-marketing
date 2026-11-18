@@ -1,0 +1,14 @@
+.venv/
+.env
+**/.env
+**/.adk/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.quarto/
+_book/
+_freeze/
+.DS_Store
+**/*.quarto_ipynb
+
+/.quarto/
