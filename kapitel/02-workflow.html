@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2533f8eb835bb007e8468656c0ea9283.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d8077d77e2478e1d92636efd4578fa50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -110,6 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -211,7 +212,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Der Agent aus Kapitel 1 entscheidet selbst, ob und wann er das Werkzeug aufruft. Bei einer offenen Frage ist das gewollt. Ein Wochenbericht soll aber jedes Mal gleich entstehen: Daten laden, Kennzahlen rechnen, Tabelle schreiben. Hier soll nichts entscheiden, sondern eine feste Reihenfolge ablaufen. Dafür gibt es in Google ADK 2 den <strong>Workflow</strong>.</p>
+<p>Der Agent aus Kapitel 1 entscheidet selbst, ob und wann er das Werkzeug aufruft. Bei einer offenen Frage ist das gewollt.</p>
+<p>Ein Wochenbericht soll aber jedes Mal gleich entstehen: Daten laden, Kennzahlen rechnen, Tabelle schreiben. Hier soll nichts entscheiden, sondern eine feste Reihenfolge ablaufen. Dafür gibt es in Google ADK 2 den <strong>Workflow</strong>.</p>
 <p><strong>Ziel:</strong> Ein Workflow im eigenen Projekt erzeugt aus <code>daten/kampagne.csv</code> einen Bericht, ohne Modell und ohne API-Schlüssel.</p>
 <p><strong>Voraussetzung:</strong> Kapitel 1 ist erledigt, <code>my_agent/tools.py</code> enthält ein Werkzeug, das richtig rechnet. Wie in Kapitel 1 wird das Morgenrot-Beispiel gelesen und im eigenen Projekt nachgebaut.</p>
 <section id="agent-oder-workflow" class="level2">
@@ -256,7 +258,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="knoten-und-kanten" class="level2">
 <h2 class="anchored" data-anchor-id="knoten-und-kanten">Knoten und Kanten</h2>
-<p>Ein Workflow besteht aus <strong>Knoten</strong> und <strong>Kanten</strong>. Ein Knoten ist ein Schritt, hier eine Python-Funktion. Eine Kante legt fest, welcher Schritt danach kommt. Was eine Funktion zurückgibt, bekommt der nächste Schritt als Eingabe <code>node_input</code>.</p>
+<p>Ein Workflow besteht aus <strong>Knoten</strong> und <strong>Kanten</strong>. Ein Knoten ist ein Schritt, hier eine Python-Funktion. Eine Kante legt fest, welcher Schritt danach kommt.</p>
+<p>Was eine Funktion zurückgibt, bekommt der nächste Schritt als Eingabe <code>node_input</code>.</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -288,6 +291,52 @@ flowchart LR
 <li><code>rechnen</code> ruft für jeden Kanal das Werkzeug <code>kennzahlen</code> aus Kapitel 1 auf. Dieselbe Funktion ist im Agenten ein Werkzeug und im Workflow ein Schritt. Eine richtige Formel muss so nur einmal stimmen.</li>
 <li><code>berichten</code> schreibt die Tabelle und nennt den Kanal mit den niedrigsten Kosten je Reservierung. Mit <code>yield Event(message=...)</code> erscheint der Text im Chat.</li>
 </ul>
+<p>So sieht der vollständige Morgenrot-Workflow aus. Er liegt in einer einzigen Datei <code>agent.py</code> im Ordner <code>morgenrot_workflow</code>, daneben eine <code>__init__.py</code> mit der Zeile <code>from . import agent</code>, genau wie beim Agenten aus Kapitel 1:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""Ein Workflow aus festen Schritten: kein Modell, kein API-Schlüssel."""</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> csv</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk <span class="im">import</span> Event, Workflow</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk.workflow <span class="im">import</span> START</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> beispiele.morgenrot_agent.tools <span class="im">import</span> kennzahlen</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>DATEN <span class="op">=</span> Path(<span class="va">__file__</span>).resolve().parents[<span class="dv">2</span>] <span class="op">/</span> <span class="st">"daten"</span> <span class="op">/</span> <span class="st">"kampagne.csv"</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> laden(node_input: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">list</span>[<span class="bu">dict</span>]:</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Liest alle Zeilen aus daten/kampagne.csv. Die Eingabe wird nicht gebraucht."""</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> DATEN.<span class="bu">open</span>(encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> datei:</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">list</span>(csv.DictReader(datei))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rechnen(node_input: <span class="bu">list</span>[<span class="bu">dict</span>]) <span class="op">-&gt;</span> <span class="bu">list</span>[<span class="bu">dict</span>]:</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Ruft für jeden Kanal dasselbe Werkzeug auf, das auch der Agent aus Kapitel 1 nutzt."""</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [kennzahlen(zeile[<span class="st">"kanal"</span>]) <span class="cf">for</span> zeile <span class="kw">in</span> node_input]</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> zahl(wert: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Schreibt eine Zahl mit zwei Nachkommastellen und Dezimalkomma."""</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>wert<span class="sc">:.2f}</span><span class="ss">"</span>.replace(<span class="st">"."</span>, <span class="st">","</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> berichten(node_input: <span class="bu">list</span>[<span class="bu">dict</span>]):</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Schreibt eine Tabelle und nennt den Kanal mit den niedrigsten Kosten je Reservierung."""</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    zeilen <span class="op">=</span> [<span class="st">"| Kanal | CTR | CPC | CR | Kosten je Reservierung |"</span>, <span class="st">"|---|---:|---:|---:|---:|"</span>]</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> node_input:</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        zeilen.append(</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"| </span><span class="sc">{</span>k[<span class="st">'kanal'</span>]<span class="sc">}</span><span class="ss"> | </span><span class="sc">{</span>zahl(k[<span class="st">'klickrate_prozent'</span>])<span class="sc">}</span><span class="ss"> % | </span><span class="sc">{</span>zahl(k[<span class="st">'klickpreis_eur'</span>])<span class="sc">}</span><span class="ss"> € "</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"| </span><span class="sc">{</span>zahl(k[<span class="st">'conversion_rate_prozent'</span>])<span class="sc">}</span><span class="ss"> % | </span><span class="sc">{</span>zahl(k[<span class="st">'kosten_je_reservierung_eur'</span>])<span class="sc">}</span><span class="ss"> € |"</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    guenstigster <span class="op">=</span> <span class="bu">min</span>(node_input, key<span class="op">=</span><span class="kw">lambda</span> k: k[<span class="st">"kosten_je_reservierung_eur"</span>])</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    zeilen.append(<span class="st">""</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    zeilen.append(<span class="ss">f"Günstigster Kanal je Reservierung: </span><span class="sc">{</span>guenstigster[<span class="st">'kanal'</span>]<span class="sc">}</span><span class="ss">. Quelle: daten/kampagne.csv"</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">yield</span> Event(message<span class="op">=</span><span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(zeilen))</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">yield</span> Event(output<span class="op">=</span>node_input)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>root_agent <span class="op">=</span> Workflow(name<span class="op">=</span><span class="st">"morgenrot_workflow"</span>, edges<span class="op">=</span>[(START, laden, rechnen, berichten)])</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Jede der drei Funktionen bekommt <code>node_input</code> und gibt etwas zurück. <code>laden</code> braucht seine Eingabe nicht, weil es immer dieselbe Datei liest. <code>zahl</code> ist nur eine Hilfsfunktion für das Dezimalkomma und steht deshalb nicht in <code>edges</code>. Im eigenen Projekt lautet der Import des Werkzeugs <code>from my_agent.tools import kennzahlen</code>.</p>
 </section>
 <section id="was-der-morgenrot-workflow-ausgibt" class="level2">
 <h2 class="anchored" data-anchor-id="was-der-morgenrot-workflow-ausgibt">Was der Morgenrot-Workflow ausgibt</h2>
@@ -302,19 +351,33 @@ Günstigster Kanal je Reservierung: Instagram. Quelle: daten/kampagne.csv</code>
 </section>
 <section id="übertragen-auf-das-eigene-projekt" class="level2">
 <h2 class="anchored" data-anchor-id="übertragen-auf-das-eigene-projekt">Übertragen auf das eigene Projekt</h2>
-<p>Im eigenen Projekt entsteht ein zweiter Ordner neben <code>my_agent</code>, nämlich <code>my_workflow</code>. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1. Da der Coding-Agent das Morgenrot-Beispiel nicht sieht, beschreibt der Auftrag das Muster vollständig:</p>
-<blockquote class="blockquote">
-<p>Lege den Ordner my_workflow mit <strong>init</strong>.py und agent.py an. In <strong>init</strong>.py steht <code>from . import agent</code>. Baue in agent.py einen Workflow mit Google ADK 2 aus drei Funktionen: laden liest daten/kampagne.csv und gibt die Zeilen als Liste zurück. rechnen bekommt diese Liste als node_input und ruft für jeden Kanal die Funktion kennzahlen aus my_agent/tools.py auf. berichten bekommt die Ergebnisse als node_input, baut eine Markdown-Tabelle mit allen Kennzahlen und einen Satz mit dem günstigsten Kanal je Abschluss und der Quelle, und gibt den Text mit <code>yield Event(message=text)</code> aus. Am Ende steht <code>root_agent = Workflow(name="my_workflow", edges=[(START, laden, rechnen, berichten)])</code>. Importe: <code>from google.adk import Event, Workflow</code> und <code>from google.adk.workflow import START</code>. Ändere nichts in my_agent.</p>
-</blockquote>
-<p>Gestartet wird wie in Kapitel 1 mit <code>uv run adk web</code>, oben links steht jetzt zusätzlich <code>my_workflow</code>. Eine beliebige Nachricht wie „Bericht“ startet den Lauf. Unter <strong>Events</strong> ist jeder Knoten mit Eingabe und Ausgabe zu sehen.</p>
-<p><strong>Prüfpunkt:</strong> Die Tabelle enthält alle Kanäle aus der eigenen CSV, und die Werte stimmen mit dem Werkzeug aus Kapitel 1 überein. Zwei Läufe liefern dieselbe Tabelle. Danach committen und pushen.</p>
+<p>Im eigenen Projekt entsteht ein zweiter Ordner neben <code>my_agent</code>, nämlich <code>my_workflow</code>. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1. Danach sieht der Projektordner so aus:</p>
+<pre class="text"><code>mein-projekt/
+├── my_agent/
+│   ├── __init__.py
+│   ├── agent.py
+│   └── tools.py        ← Werkzeug kennzahlen aus Kapitel 1
+├── my_workflow/        ← neu
+│   ├── __init__.py
+│   └── agent.py
+├── daten/
+│   └── kampagne.csv
+└── kontext/</code></pre>
+<p><strong>1. Workflow bauen lassen.</strong> Der Coding-Agent sieht das Morgenrot-Beispiel nicht. Deshalb beschreibt der Auftrag das Muster vollständig, also Ordner, Dateien, die drei Funktionen, die Kanten und die Importe:</p>
+<pre class="text prompt"><code>Lies my_agent/tools.py und daten/kampagne.csv. Lege den Ordner my_workflow neben my_agent an, mit den Dateien __init__.py und agent.py. In __init__.py steht nur die Zeile from . import agent. Baue in agent.py einen Workflow mit Google ADK 2 aus drei Funktionen, die jeweils den Parameter node_input haben: laden liest daten/kampagne.csv mit csv.DictReader und gibt die Zeilen als Liste zurück. rechnen bekommt diese Liste als node_input und ruft für jede Zeile die Funktion kennzahlen aus my_agent.tools mit dem Kanal auf. berichten bekommt die Ergebnisse als node_input, baut eine Markdown-Tabelle mit allen Kennzahlen aus der Rückgabe von kennzahlen und einen Satz mit dem günstigsten Kanal je Abschluss und der Quelle daten/kampagne.csv, und gibt den Text mit yield Event(message=text) aus. Am Ende steht root_agent = Workflow(name="my_workflow", edges=[(START, laden, rechnen, berichten)]). Importe: from google.adk import Event, Workflow und from google.adk.workflow import START. Ändere nichts in my_agent.</code></pre>
+<p>Danach <code>my_workflow/agent.py</code> öffnen und mit dem Morgenrot-Code oben vergleichen. Es müssen die drei Funktionen und die Zeile mit <code>edges</code> darin stehen. Die Namen der Spalten dürfen anders heißen, weil sie aus dem eigenen Werkzeug kommen.</p>
+<p><strong>2. Ohne Chat prüfen.</strong> Der Workflow braucht kein Modell. Deshalb lassen sich die ersten beiden Schritte direkt im Terminal ausführen:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"from my_workflow.agent import laden, rechnen; print(rechnen(laden('')))"</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Die Ausgabe ist eine Liste mit einem Dictionary je Kanal. Die Werte müssen dieselben sein wie bei einem Aufruf von <code>kennzahlen</code> aus Kapitel 1.</p>
+<p><strong>3. Im Chat starten.</strong> Läuft noch ein Server aus Kapitel 1, diesen im Terminal mit Ctrl + C (Mac) oder Strg + C (Windows) stoppen. Dann neu starten:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run adk web</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Die angezeigte Adresse öffnen und oben links <code>my_workflow</code> statt <code>my_agent</code> wählen. Eine beliebige Nachricht wie „Bericht“ startet den Lauf, die Nachricht selbst wird nicht ausgewertet. Im Chat erscheint die Tabelle. Unter <strong>Events</strong> steht jeder Knoten mit seiner Eingabe und Ausgabe, in der Reihenfolge <code>laden</code>, <code>rechnen</code>, <code>berichten</code>.</p>
+<p><strong>Prüfpunkt:</strong> Die Tabelle enthält alle Kanäle aus der eigenen CSV, und die Werte stimmen mit dem Werkzeug aus Kapitel 1 überein. Ein zweiter Lauf mit einer anderen Nachricht liefert dieselbe Tabelle. Wenn alles stimmt: committen und pushen.</p>
 </section>
 <section id="übung-ein-schritt-mehr" class="level2">
 <h2 class="anchored" data-anchor-id="übung-ein-schritt-mehr">Übung: ein Schritt mehr</h2>
 <p>Der Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Abschluss kostet. Dafür kommt zwischen <code>rechnen</code> und <code>berichten</code> ein neuer Schritt <code>pruefen</code>, der jedem Kanal ein Feld <code>warnung</code> (wahr oder falsch) hinzufügt. Ein Auftrag an den Coding-Agenten (Antigravity oder Copilot in VS Code) kann so lauten:</p>
-<blockquote class="blockquote">
-<p>Füge in my_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn die Kosten je Abschluss größer als 5 Euro sind. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.</p>
-</blockquote>
+<pre class="text prompt"><code>Füge in my_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn die Kosten je Abschluss größer als 5 Euro sind. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.</code></pre>
 <p><strong>Prüfen:</strong> Die Grenze so wählen, dass genau ein Kanal darüber liegt, zum Beispiel vorübergehend knapp unter dem teuersten Kanal. Dann muss genau bei diesem Kanal „Achtung“ erscheinen. Danach die Grenze auf 5 Euro zurücksetzen. Ein Schritt, der in <code>edges</code> fehlt, wird nie ausgeführt, auch wenn die Funktion im Code steht.</p>
 <p><strong>Hängen geblieben?</strong> Wer 20 Minuten an derselben Stelle feststeckt, bucht einen <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J">Besprechungstermin</a> (15 Minuten, online über Google Meet) und bringt die Fehlermeldung mit.</p>
 </section>
@@ -328,6 +391,24 @@ Günstigster Kanal je Reservierung: Instagram. Quelle: daten/kampagne.csv</code>
 </section>
 
 </main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("pre.prompt").forEach(function (pre) {
+    var knopf = document.createElement("button");
+    knopf.type = "button";
+    knopf.className = "prompt-copy";
+    knopf.textContent = "Kopieren";
+    knopf.addEventListener("click", function () {
+      var text = pre.querySelector("code").innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        knopf.textContent = "Kopiert";
+        setTimeout(function () { knopf.textContent = "Kopieren"; }, 1500);
+      });
+    });
+    pre.appendChild(knopf);
+  });
+});
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

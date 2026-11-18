@@ -76,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2533f8eb835bb007e8468656c0ea9283.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d8077d77e2478e1d92636efd4578fa50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -106,6 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -206,7 +207,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Das Werkzeug aus Kapitel 1 rechnet mit Zahlen, die im Projektordner liegen. Viele Fragen im Marketing brauchen aber Daten von außen: Wann sind Feiertage, wie wird das Wetter, wie steht ein Wechselkurs? Solche Daten liefern Webdienste über eine Programmierschnittstelle (API). Das Werkzeug schickt eine Anfrage an eine Adresse im Netz und bekommt strukturierte Daten zurück, meist im Format JSON.</p>
+<p>Das Werkzeug aus Kapitel 1 rechnet mit Zahlen, die im Projektordner liegen. Viele Fragen im Marketing brauchen aber Daten von außen: Wann sind Feiertage, wie wird das Wetter, wie steht ein Wechselkurs?</p>
+<p>Solche Daten liefern Webdienste über eine Programmierschnittstelle (API). Das Werkzeug schickt eine Anfrage an eine Adresse im Netz und bekommt strukturierte Daten zurück, meist im Format JSON.</p>
 <p><strong>Ziel:</strong> Ein zweites Werkzeug im eigenen Agenten fragt einen kostenfreien Webdienst ab, gibt das Ergebnis aufbereitet zurück und meldet einen Ausfall des Dienstes verständlich.</p>
 <p><strong>Voraussetzung:</strong> Kapitel 1 ist erledigt, der eigene Agent startet mit <code>uv run adk web</code> und ruft das Werkzeug <code>kennzahlen</code> auf.</p>
 <section id="der-dienst-feiertage-bei-nager.date" class="level2">
@@ -221,7 +223,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="das-werkzeug" class="level2">
 <h2 class="anchored" data-anchor-id="das-werkzeug">Das Werkzeug</h2>
-<p>Die Funktion braucht kein zusätzliches Paket. <code>urllib.request</code> gehört zu Python. Die Kopfzeile <code>User-Agent</code> nennt dem Dienst den Absender, manche Dienste lehnen Anfragen ohne sie ab. Wichtig sind außerdem zwei Dinge, die beim Rechnen mit einer CSV keine Rolle spielen: ein <strong>Zeitlimit</strong>, damit der Agent nicht hängt, wenn der Dienst nicht antwortet, und eine <strong>Fehlerbehandlung</strong>, die statt eines Absturzes eine Meldung zurückgibt.</p>
+<p>Die Funktion braucht kein zusätzliches Paket. <code>urllib.request</code> gehört zu Python.</p>
+<p>Die Kopfzeile <code>User-Agent</code> nennt dem Dienst den Absender, manche Dienste lehnen Anfragen ohne sie ab.</p>
+<p>Wichtig sind außerdem zwei Dinge, die beim Rechnen mit einer CSV keine Rolle spielen: ein <strong>Zeitlimit</strong>, damit der Agent nicht hängt, wenn der Dienst nicht antwortet, und eine <strong>Fehlerbehandlung</strong>, die statt eines Absturzes eine Meldung zurückgibt.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -284,17 +288,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p><strong>1. Dienst prüfen.</strong> Die Adresse im Browser öffnen. Kommt JSON zurück, ohne dass eine Anmeldung verlangt wird, passt der Dienst.</p>
 <p><strong>2. Werkzeug.</strong></p>
-<blockquote class="blockquote">
-<p>Schreibe in my_agent/tools.py eine Funktion feiertage(land: str, jahr: int), die mit urllib.request die Adresse https://nagerholidays.com/api/v4/Holidays/{land}/{jahr} abfragt, mit dem Header User-Agent „gwa26-agent“ und timeout=10. Gib ein Dictionary mit der Liste feiertage (datum, name, gebiet aus subdivisionCodes, sonst „ganzes Land“) und der Quelle zurück. Fange jeden Fehler mit try und except ab und gib dann ein Dictionary mit dem Schlüssel fehler zurück, ebenso bei einer leeren Liste. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py zusätzlich unter tools ein. Ändere sonst nichts.</p>
-</blockquote>
+<pre class="text prompt"><code>Schreibe in my_agent/tools.py eine Funktion feiertage(land: str, jahr: int), die mit urllib.request die Adresse https://nagerholidays.com/api/v4/Holidays/{land}/{jahr} abfragt, mit dem Header User-Agent „gwa26-agent“ und timeout=10. Gib ein Dictionary mit der Liste feiertage (datum, name, gebiet aus subdivisionCodes, sonst „ganzes Land“) und der Quelle zurück. Fange jeden Fehler mit try und except ab und gib dann ein Dictionary mit dem Schlüssel fehler zurück, ebenso bei einer leeren Liste. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py zusätzlich unter tools ein. Ändere sonst nichts.</code></pre>
 <p>Wer einen anderen Dienst nutzt, ersetzt im Auftrag Namen, Adresse und Felder.</p>
 <p><strong>3. Instruction ergänzen.</strong></p>
-<blockquote class="blockquote">
-<p>Ergänze in my_agent/agent.py die Instruction um die Regel „Für Feiertage rufe das Werkzeug feiertage auf und nenne die Quelle.“ Ändere sonst nichts.</p>
-</blockquote>
+<pre class="text prompt"><code>Ergänze in my_agent/agent.py die Instruction um die Regel „Für Feiertage rufe das Werkzeug feiertage auf und nenne die Quelle.“ Ändere sonst nichts.</code></pre>
 <p><strong>Prüfpunkt:</strong> Die Funktion ohne Modell testen:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"from my_agent.tools import feiertage; print(feiertage('DE', 2026))"</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Ein Datum aus der Ausgabe mit der Adresse im Browser vergleichen. Danach einen Fehler erzwingen, etwa mit dem Ländercode <code>XX</code>. Die Ausgabe muss ein Dictionary mit <code>fehler</code> sein, kein Traceback. Zum Schluss <code>uv run adk web</code> starten und fragen: „Welche Feiertage liegen im Mai 2026 in Baden-Württemberg?“ Unter Events muss ein Aufruf von <code>feiertage</code> stehen. Wenn alles stimmt: committen und pushen.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-c</span> <span class="st">"from my_agent.tools import feiertage; print(feiertage('DE', 2026))"</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ein Datum aus der Ausgabe mit der Adresse im Browser vergleichen.</p>
+<p>Danach einen Fehler erzwingen, etwa mit dem Ländercode <code>XX</code>. Die Ausgabe muss ein Dictionary mit <code>fehler</code> sein, kein Traceback.</p>
+<p>Zum Schluss <code>uv run adk web</code> starten und fragen: „Welche Feiertage liegen im Mai 2026 in Baden-Württemberg?“ Unter Events muss ein Aufruf von <code>feiertage</code> stehen. Wenn alles stimmt: committen und pushen.</p>
 </section>
 <section id="übung-wenn-der-dienst-schweigt" class="level2">
 <h2 class="anchored" data-anchor-id="übung-wenn-der-dienst-schweigt">Übung: wenn der Dienst schweigt</h2>
@@ -318,6 +320,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 
 </main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("pre.prompt").forEach(function (pre) {
+    var knopf = document.createElement("button");
+    knopf.type = "button";
+    knopf.className = "prompt-copy";
+    knopf.textContent = "Kopieren";
+    knopf.addEventListener("click", function () {
+      var text = pre.querySelector("code").innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        knopf.textContent = "Kopiert";
+        setTimeout(function () { knopf.textContent = "Kopieren"; }, 1500);
+      });
+    });
+    pre.appendChild(knopf);
+  });
+});
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
