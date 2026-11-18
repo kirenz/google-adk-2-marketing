@@ -26,15 +26,6 @@ Die Gründerin hält Instagram für den besseren Kanal, weil der Klick nur 0,18 
 
 ## Start
 
-Voraussetzungen sind [uv](https://docs.astral.sh/uv/getting-started/installation/), Git und ein eigener Gemini-API-Schlüssel aus [Google AI Studio](https://aistudio.google.com/apikey). Alle Befehle laufen im Ordner des Repositorys:
+**Im Kurs Generative AI & Web Analytics** wird ausschließlich im eigenen Projektordner `gwa26-agent-<nachname>` gearbeitet. Die Morgenrot-Beispiele in diesem Buch sind zum Lesen, Dateien und Daten legen Sie im eigenen Projekt selbst an. Wie er startklar wird, steht auf der Seite [Einrichtung](https://kirenz.github.io/genai-web-analytics-ws2627/einrichtung.html#adk) des Kurses, die Schritte mit empfohlenen Daten auf der Seite [Semesterprojekt](https://kirenz.github.io/genai-web-analytics-ws2627/projekt.html). Jedes Kapitel zeigt zuerst das Morgenrot-Beispiel zum Lesen und überträgt es dann mit Aufträgen an den Coding-Agenten auf das eigene Unternehmen. Wer feststeckt, bucht einen [Besprechungstermin](https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J) (15 Minuten, online über Google Meet).
 
-```bash
-git clone https://github.com/kirenz/google-adk-2-marketing.git
-cd google-adk-2-marketing
-uv sync
-cp .env.example .env
-```
-
-In der Datei `.env` ersetzt der eigene Schlüssel den Platzhalter. Die Datei steht in `.gitignore` und gehört nie in ein Repository. `uv run pytest` prüft danach ohne Schlüssel, ob die Werkzeuge richtig rechnen.
-
-Das Buch nutzt google-adk 2.13.0 und Python 3.13, beides legt `uv.lock` fest. Eine englische, technisch ausführlichere Fassung mit einem BI-Fall ist [Google ADK 2](https://kirenz.github.io/google-adk-2/).
+Die Beispiele nutzen google-adk 2.13.0 und Python 3.13. Im eigenen Projekt installiert `uv add google-adk` die aktuelle Version, die Befehle im Buch funktionieren damit genauso.

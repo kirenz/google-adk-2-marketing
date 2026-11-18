@@ -29,6 +29,14 @@ def test_agent_hat_werkzeug():
     assert kennzahlen in root_agent.tools
 
 
+def test_instruction_enthaelt_kontext_und_regeln():
+    text = root_agent.instruction
+    assert "27 Euro" in text  # aus kontext/unternehmen.md
+    assert "Persona: Lena" in text  # aus kontext/zielgruppe.md
+    assert "Annahme:" in text  # Regel aus AGENTS.md
+    assert "{" not in text  # ADK liest {name} als Platzhalter
+
+
 def test_workflow_bericht():
     import asyncio
     from beispiele.laufen import einmal
