@@ -1,0 +1,115 @@
+# Ein Werkzeug, das einen Webdienst abfragt
+
+Das Werkzeug aus Kapitel 1 rechnet mit Zahlen, die im Projektordner liegen. Viele Fragen im Marketing brauchen aber Daten von außen: Wann sind Feiertage, wie wird das Wetter, wie steht ein Wechselkurs? Solche Daten liefern Webdienste über eine Programmierschnittstelle (API). Das Werkzeug schickt eine Anfrage an eine Adresse im Netz und bekommt strukturierte Daten zurück, meist im Format JSON.
+
+**Ziel:** Ein zweites Werkzeug im eigenen Agenten fragt einen kostenfreien Webdienst ab, gibt das Ergebnis aufbereitet zurück und meldet einen Ausfall des Dienstes verständlich.
+
+**Voraussetzung:** Kapitel 1 ist erledigt, der eigene Agent startet mit `uv run adk web` und ruft das Werkzeug `kennzahlen` auf.
+
+## Der Dienst: Feiertage bei Nager.Date
+
+Nager.Date liefert die gesetzlichen Feiertage vieler Länder. Der Dienst ist kostenfrei und braucht keinen API-Schlüssel. Eine Anfrage ist eine gewöhnliche Adresse, die sich auch im Browser öffnen lässt:
+
+```text
+https://nagerholidays.com/api/v4/Holidays/DE/2026
+```
+
+`DE` ist der Ländercode (ISO 3166-1, zum Beispiel `AT` oder `CH`), `2026` das Jahr. Zurück kommt eine Liste, ein Eintrag sieht so aus:
+
+```json
+{"date": "2026-01-01", "name": "New Year's Day", "countryCode": "DE",
+ "nationalHoliday": true, "subdivisionCodes": null, "holidayTypes": ["Public"]}
+```
+
+`subdivisionCodes` nennt die Bundesländer, in denen ein Feiertag gilt, etwa `["DE-BW", "DE-BY"]`. Steht dort `null`, gilt er im ganzen Land.
+
+Für Morgenrot ist die Frage praktisch: Eine Kampagne für das Kaffee-Abo soll nicht an einem langen Wochenende starten, an dem viele verreist sind. Der Agent soll sagen können, welche Feiertage in einem Zeitraum liegen.
+
+## Das Werkzeug
+
+Die Funktion braucht kein zusätzliches Paket. `urllib.request` gehört zu Python. Die Kopfzeile `User-Agent` nennt dem Dienst den Absender, manche Dienste lehnen Anfragen ohne sie ab. Wichtig sind außerdem zwei Dinge, die beim Rechnen mit einer CSV keine Rolle spielen: ein **Zeitlimit**, damit der Agent nicht hängt, wenn der Dienst nicht antwortet, und eine **Fehlerbehandlung**, die statt eines Absturzes eine Meldung zurückgibt.
+
+```python
+import json
+import urllib.request
+
+
+def feiertage(land: str, jahr: int) -> dict:
+    """Fragt die gesetzlichen Feiertage eines Landes bei Nager.Date ab.
+
+    Args:
+        land: Ländercode nach ISO 3166-1, z. B. "DE", "AT" oder "CH".
+        jahr: Jahr als Zahl, z. B. 2026.
+
+    Returns:
+        Ein Dictionary mit der Liste "feiertage" (Datum, Name, Gebiet)
+        und der Quelle. Ist der Dienst nicht erreichbar oder der
+        Ländercode unbekannt, enthält es den Schlüssel "fehler".
+    """
+    url = f"https://nagerholidays.com/api/v4/Holidays/{land.upper()}/{jahr}"
+    anfrage = urllib.request.Request(url, headers={"User-Agent": "gwa26-agent"})
+    try:
+        with urllib.request.urlopen(anfrage, timeout=10) as antwort:
+            daten = json.load(antwort)
+    except Exception as fehler:
+        return {"fehler": f"Nager.Date nicht erreichbar oder Eingabe ungültig: {fehler}",
+                "quelle": url}
+    if not daten:
+        return {"fehler": f"Keine Feiertage für {land} {jahr} gefunden.", "quelle": url}
+    liste = [{"datum": f["date"], "name": f["name"],
+              "gebiet": f.get("subdivisionCodes") or "ganzes Land"} for f in daten]
+    return {"feiertage": liste, "quelle": url}
+```
+
+Die Rückgabe nennt die Quelle, damit der Agent sie in der Antwort angeben kann. Die Namen kommen vom Dienst auf Englisch. Das Modell übersetzt sie bei Bedarf selbst, die Daten bleiben unverändert.
+
+## Übertragen auf das eigene Unternehmen
+
+Der Dienst muss nicht Nager.Date sein. Er muss kostenfrei sein, ohne API-Schlüssel funktionieren und zur Marketingaufgabe des eigenen Agenten passen. Zwei weitere Beispiele:
+
+| Dienst | Adresse (Beispiel) | Passt für |
+|---|---|---|
+| Open-Meteo, Wetter | `https://api.open-meteo.com/v1/forecast?latitude=48.78&longitude=9.18&daily=temperature_2m_max&timezone=Europe/Berlin` | saisonale Angebote, Außengastronomie, Veranstaltungen |
+| Frankfurter, EZB-Wechselkurse | `https://api.frankfurter.app/latest?from=EUR&to=USD,CHF` | Preise und Budgets in anderen Währungen |
+
+**1. Dienst prüfen.** Die Adresse im Browser öffnen. Kommt JSON zurück, ohne dass eine Anmeldung verlangt wird, passt der Dienst.
+
+**2. Werkzeug.**
+
+> Schreibe in my_agent/tools.py eine Funktion feiertage(land: str, jahr: int), die mit urllib.request die Adresse https://nagerholidays.com/api/v4/Holidays/{land}/{jahr} abfragt, mit dem Header User-Agent „gwa26-agent“ und timeout=10. Gib ein Dictionary mit der Liste feiertage (datum, name, gebiet aus subdivisionCodes, sonst „ganzes Land“) und der Quelle zurück. Fange jeden Fehler mit try und except ab und gib dann ein Dictionary mit dem Schlüssel fehler zurück, ebenso bei einer leeren Liste. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py zusätzlich unter tools ein. Ändere sonst nichts.
+
+Wer einen anderen Dienst nutzt, ersetzt im Auftrag Namen, Adresse und Felder.
+
+**3. Instruction ergänzen.**
+
+> Ergänze in my_agent/agent.py die Instruction um die Regel „Für Feiertage rufe das Werkzeug feiertage auf und nenne die Quelle.“ Ändere sonst nichts.
+
+**Prüfpunkt:** Die Funktion ohne Modell testen:
+
+```bash
+uv run python -c "from my_agent.tools import feiertage; print(feiertage('DE', 2026))"
+```
+
+Ein Datum aus der Ausgabe mit der Adresse im Browser vergleichen. Danach einen Fehler erzwingen, etwa mit dem Ländercode `XX`. Die Ausgabe muss ein Dictionary mit `fehler` sein, kein Traceback. Zum Schluss `uv run adk web` starten und fragen: „Welche Feiertage liegen im Mai 2026 in Baden-Württemberg?“ Unter Events muss ein Aufruf von `feiertage` stehen. Wenn alles stimmt: committen und pushen.
+
+## Übung: wenn der Dienst schweigt
+
+Ein Webdienst kann ausfallen, gerade am Tag einer Vorführung. Die Übung prüft, ob der Agent dann ehrlich bleibt.
+
+1. In `tools.py` vorübergehend die Adresse verfälschen, etwa `nagerholidays.com` durch `nagerholidays.invalid` ersetzen.
+2. Im Chat nach den Feiertagen im Dezember fragen.
+3. Festhalten: Was steht in der Rückgabe unter Events, und was sagt der Agent?
+
+**Prüfen:** Der Agent sagt, dass der Dienst nicht erreichbar ist, und nennt keine Feiertage aus dem Gedächtnis. Nennt er trotzdem Daten, gehört eine Regel in die Instruction wie „Liefert ein Werkzeug einen Fehler, nenne den Fehler und keine eigenen Angaben.“ Danach die Adresse zurücksetzen.
+
+**Hängen geblieben?** Wer 20 Minuten an derselben Stelle feststeckt, bucht einen [Besprechungstermin](https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J) (15 Minuten, online über Google Meet) und bringt die Fehlermeldung mit.
+
+## Häufige Fehler
+
+**`HTTP Error 404`.** Ländercode oder Jahr stimmen nicht, oder die Adresse hat einen Tippfehler. Die Adresse aus der Fehlermeldung im Browser öffnen.
+
+**`URLError` oder Zeitüberschreitung.** Kein Netz oder der Dienst antwortet nicht. Im HdM-WLAN hilft manchmal ein zweiter Versuch. Das Werkzeug muss in diesem Fall eine Meldung zurückgeben, nicht abstürzen.
+
+**`SSL: CERTIFICATE_VERIFY_FAILED` (Mac).** Python findet die Zertifikate nicht. Abhilfe: `uv add certifi` und im Code `urllib.request.urlopen(url, timeout=10, context=ssl.create_default_context(cafile=certifi.where()))` mit `import ssl, certifi`.
+
+**Der Agent ruft das Werkzeug nicht auf.** Es fehlt in `tools=[...]`, oder der Docstring sagt nicht, wofür die Funktion da ist.
