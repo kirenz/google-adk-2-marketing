@@ -1,6 +1,8 @@
 # Ein Werkzeug, das einen Webdienst abfragt
 
-Das Werkzeug aus Kapitel 1 rechnet mit Zahlen, die im Projektordner liegen. Viele Fragen im Marketing brauchen aber Daten von außen: Wann sind Feiertage, wie wird das Wetter, wie steht ein Wechselkurs? Solche Daten liefern Webdienste über eine Programmierschnittstelle (API). Das Werkzeug schickt eine Anfrage an eine Adresse im Netz und bekommt strukturierte Daten zurück, meist im Format JSON.
+Das Werkzeug aus Kapitel 1 rechnet mit Zahlen, die im Projektordner liegen. Viele Fragen im Marketing brauchen aber Daten von außen: Wann sind Feiertage, wie wird das Wetter, wie steht ein Wechselkurs?
+
+Solche Daten liefern Webdienste über eine Programmierschnittstelle (API). Das Werkzeug schickt eine Anfrage an eine Adresse im Netz und bekommt strukturierte Daten zurück, meist im Format JSON.
 
 **Ziel:** Ein zweites Werkzeug im eigenen Agenten fragt einen kostenfreien Webdienst ab, gibt das Ergebnis aufbereitet zurück und meldet einen Ausfall des Dienstes verständlich.
 
@@ -27,7 +29,11 @@ Für Morgenrot ist die Frage praktisch: Eine Kampagne für das Kaffee-Abo soll n
 
 ## Das Werkzeug
 
-Die Funktion braucht kein zusätzliches Paket. `urllib.request` gehört zu Python. Die Kopfzeile `User-Agent` nennt dem Dienst den Absender, manche Dienste lehnen Anfragen ohne sie ab. Wichtig sind außerdem zwei Dinge, die beim Rechnen mit einer CSV keine Rolle spielen: ein **Zeitlimit**, damit der Agent nicht hängt, wenn der Dienst nicht antwortet, und eine **Fehlerbehandlung**, die statt eines Absturzes eine Meldung zurückgibt.
+Die Funktion braucht kein zusätzliches Paket. `urllib.request` gehört zu Python.
+
+Die Kopfzeile `User-Agent` nennt dem Dienst den Absender, manche Dienste lehnen Anfragen ohne sie ab.
+
+Wichtig sind außerdem zwei Dinge, die beim Rechnen mit einer CSV keine Rolle spielen: ein **Zeitlimit**, damit der Agent nicht hängt, wenn der Dienst nicht antwortet, und eine **Fehlerbehandlung**, die statt eines Absturzes eine Meldung zurückgibt.
 
 ```python
 import json
@@ -76,13 +82,17 @@ Der Dienst muss nicht Nager.Date sein. Er muss kostenfrei sein, ohne API-Schlüs
 
 **2. Werkzeug.**
 
-> Schreibe in my_agent/tools.py eine Funktion feiertage(land: str, jahr: int), die mit urllib.request die Adresse https://nagerholidays.com/api/v4/Holidays/{land}/{jahr} abfragt, mit dem Header User-Agent „gwa26-agent“ und timeout=10. Gib ein Dictionary mit der Liste feiertage (datum, name, gebiet aus subdivisionCodes, sonst „ganzes Land“) und der Quelle zurück. Fange jeden Fehler mit try und except ab und gib dann ein Dictionary mit dem Schlüssel fehler zurück, ebenso bei einer leeren Liste. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py zusätzlich unter tools ein. Ändere sonst nichts.
+```{.text .prompt}
+Schreibe in my_agent/tools.py eine Funktion feiertage(land: str, jahr: int), die mit urllib.request die Adresse https://nagerholidays.com/api/v4/Holidays/{land}/{jahr} abfragt, mit dem Header User-Agent „gwa26-agent“ und timeout=10. Gib ein Dictionary mit der Liste feiertage (datum, name, gebiet aus subdivisionCodes, sonst „ganzes Land“) und der Quelle zurück. Fange jeden Fehler mit try und except ab und gib dann ein Dictionary mit dem Schlüssel fehler zurück, ebenso bei einer leeren Liste. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py zusätzlich unter tools ein. Ändere sonst nichts.
+```
 
 Wer einen anderen Dienst nutzt, ersetzt im Auftrag Namen, Adresse und Felder.
 
 **3. Instruction ergänzen.**
 
-> Ergänze in my_agent/agent.py die Instruction um die Regel „Für Feiertage rufe das Werkzeug feiertage auf und nenne die Quelle.“ Ändere sonst nichts.
+```{.text .prompt}
+Ergänze in my_agent/agent.py die Instruction um die Regel „Für Feiertage rufe das Werkzeug feiertage auf und nenne die Quelle.“ Ändere sonst nichts.
+```
 
 **Prüfpunkt:** Die Funktion ohne Modell testen:
 
@@ -90,7 +100,11 @@ Wer einen anderen Dienst nutzt, ersetzt im Auftrag Namen, Adresse und Felder.
 uv run python -c "from my_agent.tools import feiertage; print(feiertage('DE', 2026))"
 ```
 
-Ein Datum aus der Ausgabe mit der Adresse im Browser vergleichen. Danach einen Fehler erzwingen, etwa mit dem Ländercode `XX`. Die Ausgabe muss ein Dictionary mit `fehler` sein, kein Traceback. Zum Schluss `uv run adk web` starten und fragen: „Welche Feiertage liegen im Mai 2026 in Baden-Württemberg?“ Unter Events muss ein Aufruf von `feiertage` stehen. Wenn alles stimmt: committen und pushen.
+Ein Datum aus der Ausgabe mit der Adresse im Browser vergleichen.
+
+Danach einen Fehler erzwingen, etwa mit dem Ländercode `XX`. Die Ausgabe muss ein Dictionary mit `fehler` sein, kein Traceback.
+
+Zum Schluss `uv run adk web` starten und fragen: „Welche Feiertage liegen im Mai 2026 in Baden-Württemberg?“ Unter Events muss ein Aufruf von `feiertage` stehen. Wenn alles stimmt: committen und pushen.
 
 ## Übung: wenn der Dienst schweigt
 

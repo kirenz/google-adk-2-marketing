@@ -1,0 +1,18 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("pre.prompt").forEach(function (pre) {
+    var knopf = document.createElement("button");
+    knopf.type = "button";
+    knopf.className = "prompt-copy";
+    knopf.textContent = "Kopieren";
+    knopf.addEventListener("click", function () {
+      var text = pre.querySelector("code").innerText;
+      navigator.clipboard.writeText(text).then(function () {
+        knopf.textContent = "Kopiert";
+        setTimeout(function () { knopf.textContent = "Kopieren"; }, 1500);
+      });
+    });
+    pre.appendChild(knopf);
+  });
+});
+</script>

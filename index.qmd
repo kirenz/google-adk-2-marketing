@@ -1,8 +1,14 @@
 # Worum es geht {.unnumbered}
 
-Ein Sprachmodell schreibt gute Texte, rechnet aber unzuverlässig und kennt die Zahlen eines Unternehmens nicht. Ein Agent schließt diese Lücke. Er verbindet das Modell mit Regeln (der Instruction) und mit Werkzeugen, also Python-Funktionen, die Daten lesen und rechnen. Das Modell entscheidet, wann ein Werkzeug gebraucht wird. Gerechnet wird in Python.
+Ein Sprachmodell schreibt gute Texte, rechnet aber unzuverlässig und kennt die Zahlen eines Unternehmens nicht. Ein Agent schließt diese Lücke. Er verbindet das Modell mit Regeln (der Instruction) und mit Werkzeugen, also Python-Funktionen, die Daten lesen und rechnen.
 
-Dieses Buch baut solche Agenten mit Google ADK 2, dem Agent Development Kit von Google, Schritt für Schritt an einem Marketingfall. Jedes Kapitel hat ein lauffähiges Beispiel und eine Übung, die das Beispiel auf ein eigenes Unternehmen überträgt. Programmierkenntnisse sind keine Voraussetzung: Den Code schreibt ein Coding-Agent, etwa Antigravity oder Visual Studio Code mit Copilot. Beide funktionieren gleich, die Aufträge im Buch lassen sich in jeden der beiden Chats kopieren. Die eigene Aufgabe ist, den Code zu verstehen, Aufträge zu geben und Ergebnisse zu prüfen. Wie IDE, Coding-Agent, uv, Google ADK und GitHub zusammenhängen, zeigt die Seite [Werkzeuge im Überblick](https://kirenz.github.io/genai-web-analytics-ws2627/bausteine.html) auf der Kursseite.
+Das Modell entscheidet, wann ein Werkzeug gebraucht wird. Gerechnet wird in Python.
+
+Dieses Buch baut solche Agenten mit Google ADK 2, dem Agent Development Kit von Google, Schritt für Schritt an einem Marketingfall. Jedes Kapitel hat ein lauffähiges Beispiel und eine Übung, die das Beispiel auf ein eigenes Unternehmen überträgt.
+
+Programmierkenntnisse sind keine Voraussetzung: Den Code schreibt ein Coding-Agent, etwa Antigravity oder Visual Studio Code mit Copilot. Beide funktionieren gleich, die Aufträge im Buch lassen sich in jeden der beiden Chats kopieren.
+
+Die eigene Aufgabe ist, den Code zu verstehen, Aufträge zu geben und Ergebnisse zu prüfen. Wie IDE, Coding-Agent, uv, Google ADK und GitHub zusammenhängen, zeigt die Seite [Werkzeuge im Überblick](https://kirenz.github.io/genai-web-analytics-ws2627/bausteine.html) auf der Kursseite.
 
 ## Der Fall: Rösterei Morgenrot
 

@@ -36,4 +36,6 @@ format:
     theme: cosmo
     toc: true
     code-copy: true
+    css: styles.css
+    include-after-body: prompt-copy.html
     number-sections: false
