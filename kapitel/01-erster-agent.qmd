@@ -1,0 +1,178 @@
+# Der erste Agent mit einem Werkzeug
+
+Die Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung günstiger bringt. Ein Chat mit einem Sprachmodell würde die Kennzahlen aus der Tabelle abschreiben und im Kopf rechnen, mal richtig, mal knapp daneben. Der Agent in diesem Kapitel rechnet nicht selbst. Er ruft eine Python-Funktion auf, die die Datei liest und die Kennzahlen berechnet, und formuliert aus dem Ergebnis die Antwort.
+
+**Ziel:** Ein eigener Agent beantwortet Fragen zu den eigenen Kennzahlen und holt die Zahlen dafür aus einem Werkzeug.
+
+## Vorher: das Projekt ist startklar
+
+Dieses Kapitel setzt einen Projektordner voraus. Die Liste hilft beim Prüfen, ob alles da ist. Fehlt ein Punkt, steht der Weg dazu auf der Einrichtungsseite des Kurses. Was welcher Baustein tut, zeigt die Seite [Werkzeuge im Überblick](https://kirenz.github.io/genai-web-analytics-ws2627/bausteine.html).
+
+- Der Projektordner ist in der IDE geöffnet (Antigravity oder VS Code mit Copilot), und das Terminal der IDE steht in diesem Ordner.
+- `uv add google-adk` ist im Projektordner gelaufen. Ob das geklappt hat, zeigt `uv run adk --version`.
+- Ein Agentenordner existiert, angelegt mit `uv run adk create my_agent`. Darin liegen `__init__.py`, `agent.py` und `.env` mit dem eigenen Schlüssel.
+- `uv run adk web` startet, und der Agent antwortet auf „Hallo!“.
+- Die Datei `.gitignore` enthält `.env` und `.venv`, das Projekt liegt in einem privaten GitHub-Repository.
+- Die Dateien in `kontext` und `AGENTS.md` sind ausgefüllt (Schritt „Kontext und Regeln“ auf der Projektseite des Kurses).
+
+::: {.callout-note}
+## Beispiel lesen, im eigenen Projekt bauen
+Das Morgenrot-Beispiel liegt im Repository dieses Buchs, nicht im eigenen Projektordner. Der Code, der zum Verstehen nötig ist, steht vollständig im Kapitel. Gebaut und ausprobiert wird nur im eigenen Projekt, ab dem Abschnitt „Übertragen auf das eigene Unternehmen“.
+:::
+
+## Drei Teile eines Agenten
+
+Ein Agent in Google ADK besteht aus drei Teilen. Das **Modell** (hier Gemini) versteht die Frage und schreibt die Antwort. Die **Instruction** legt fest, welche Rolle der Agent hat, welche Regeln gelten und wie die Ausgabe aussieht. Die **Werkzeuge** sind Python-Funktionen, die der Agent aufrufen darf.
+
+```{mermaid}
+flowchart LR
+  F["Frage<br/>Was kostet eine Reservierung<br/>über Instagram?"] --> M["Modell<br/>entscheidet: Werkzeug nötig"]
+  M --> W["Werkzeug kennzahlen<br/>liest daten/kampagne.csv<br/>und rechnet"]
+  W --> M2["Modell<br/>formuliert die Antwort<br/>aus der Rückgabe"]
+  M2 --> A["Antwort mit Tabelle<br/>und Quelle"]
+```
+
+Wichtig ist die Arbeitsteilung: Das Modell entscheidet, ob und mit welchem Argument ein Werkzeug aufgerufen wird. Was dabei herauskommt, bestimmt allein der Python-Code. Eine falsche Formel im Werkzeug liefert also zuverlässig falsche Zahlen, und eine gute Instruction rettet das nicht.
+
+## Der Projektordner
+
+Im eigenen Projekt sieht der Ordner nach diesem Kapitel so aus. Im Morgenrot-Beispiel heißt der Agentenordner `morgenrot_agent`, sonst ist der Aufbau gleich.
+
+```text
+gwa26-agent-<nachname>/
+├── AGENTS.md            Beschreibung und Regeln, fließen in die Instruction
+├── kontext/             unternehmen.md, zielgruppe.md, ...
+├── daten/
+│   └── kampagne.csv     Zahlen, die das Werkzeug auswertet
+└── my_agent/
+    ├── __init__.py      macht den Ordner für ADK auffindbar
+    ├── .env             API-Schlüssel, nie committen
+    ├── agent.py         root_agent mit Instruction und Werkzeugen
+    └── tools.py         die Werkzeuge als Python-Funktionen
+```
+
+`uv run adk web` sucht in jedem Unterordner des Projekts nach einer Variablen `root_agent`. Der Ordnername ist der Name, unter dem der Agent in der Oberfläche erscheint. Fehlt `__init__.py`, taucht der Agent dort nicht auf.
+
+## Das Werkzeug: eine Funktion mit Beschreibung
+
+Ein Werkzeug ist eine gewöhnliche Python-Funktion. Das Modell sieht ihren Code nicht. Es sieht nur den Namen, die Parameter mit ihren Typen und den Docstring, also den Text in den dreifachen Anführungszeichen. Daraus schließt es, wann die Funktion passt und welches Argument sie braucht. Der Docstring ist deshalb kein Kommentar für Menschen, sondern die Bedienungsanleitung für das Modell.
+
+```python
+def kennzahlen(kanal: str) -> dict:
+    """Berechnet die Kennzahlen eines Werbekanals aus daten/kampagne.csv.
+
+    Args:
+        kanal: Name des Kanals, genau wie in der Spalte kanal,
+            z. B. "Suchanzeigen" oder "Instagram".
+
+    Returns:
+        Ein Dictionary mit Klickrate (CTR) und Conversion-Rate in Prozent,
+        Klickpreis (CPC) und Kosten je Reservierung in Euro. Ist der Kanal
+        unbekannt, enthält es den Schlüssel "fehler" und die Liste der
+        vorhandenen Kanäle.
+    """
+```
+
+Der Rumpf der Funktion liest die Zeile des Kanals und rechnet mit den bekannten Formeln: Klickrate = Klicks ÷ Impressionen, Klickpreis = Kosten ÷ Klicks, Conversion-Rate = Reservierungen ÷ Klicks, Kosten je Reservierung = Kosten ÷ Reservierungen. Zurück kommt ein Dictionary mit den Werten und der Quelle. Für einen unbekannten Kanal gibt die Funktion keine erfundene Zahl zurück, sondern eine Fehlermeldung mit den vorhandenen Kanälen. So kann der Agent nachfragen, statt zu raten.
+
+## Der Agent: Instruction aus Kontext und Regeln
+
+Die Instruction sagt dem Modell, wer es ist, was es tun soll und woran es sich hält. Damit der Agent das eigene Unternehmen kennt, kommt der Inhalt der Kontextdateien und der `AGENTS.md` direkt in die Instruction. Der Agent liest diese Dateien nicht von selbst. Der Coding-Agent in der IDE liest `AGENTS.md` zwar automatisch, der eigene ADK-Agent aber nur das, was im Code steht. Eine kleine Funktion `lies` holt deshalb den Text beim Start aus den Dateien:
+
+```python
+PROJEKT = Path(__file__).resolve().parents[1]  # Ordner über my_agent
+
+
+def lies(pfad: str) -> str:
+    return (PROJEKT / pfad).read_text(encoding="utf-8")
+
+
+root_agent = Agent(
+    name="morgenrot_agent",
+    model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"),
+    description="Wertet die Werbekanäle der Rösterei Morgenrot aus.",
+    instruction=f"""
+Rolle: Du unterstützt die Gründerinnen der Rösterei Morgenrot
+bei der Auswertung ihrer Werbung.
+Aufgabe: Beantworte Fragen zu den Werbekanälen.
+Werkzeug: Rechne nie selbst. Rufe für jede Kennzahl das Werkzeug
+kennzahlen auf.
+Ausgabe: höchstens fünf Sätze, danach eine Tabelle mit den Kennzahlen
+und die Quelle aus der Rückgabe.
+
+{lies("kontext/unternehmen.md")}
+{lies("kontext/zielgruppe.md")}
+{lies("AGENTS.md")}
+""",
+    tools=[kennzahlen],
+)
+```
+
+Das `f` vor den Anführungszeichen macht aus dem Text einen f-String: An den Stellen in geschweiften Klammern setzt Python beim Start den Inhalt der Dateien ein. Ändert sich `unternehmen.md`, genügt ein Neustart von `adk web`, am Code ändert sich nichts.
+
+In der `AGENTS.md` von Morgenrot stehen fünf Regeln, darunter „Nutze nur Fakten aus den Dateien im Ordner kontext und aus den Rückgaben der Werkzeuge“ und „Kennzeichne jede eigene Einschätzung mit ‚Annahme:‘“. Die Regel zum Werkzeug steht direkt in der Instruction, weil sie nur für diesen Agenten gilt. `tools=[kennzahlen]` trägt die Funktion als Werkzeug ein. Ohne diesen Eintrag kennt der Agent sie nicht, auch wenn sie in `tools.py` steht.
+
+Die Instruction hat damit vier Teile: Rolle, Aufgabe, Regeln, Ausgabe. „Sei hilfreich“ wäre keine Regel, weil sich nicht prüfen lässt, ob sie eingehalten wurde. „Rechne nie selbst, rufe das Werkzeug auf“ lässt sich dagegen an jedem Lauf prüfen: Entweder taucht der Werkzeugaufruf auf oder nicht. Gute Regeln sind so formuliert, dass eine zweite Person sie ohne Rückfrage abhaken kann.
+
+## Was beim Start zu sehen ist
+
+Gestartet wird ein Agent im Projektordner mit `uv run adk web`. Das Terminal zeigt eine lokale Adresse, meist `http://127.0.0.1:8000`. Dort wird oben links der Agent gewählt, gestoppt wird der Server im Terminal mit Ctrl + C.
+
+Die Antwort allein beweist nichts. Links in der Oberfläche steht unter **Events** jeder Schritt des Laufs. Dort lässt sich prüfen, ob das Werkzeug aufgerufen wurde, mit welchem Argument und was zurückkam. Auf die Frage „Welcher Kanal bringt eine Reservierung günstiger?“ ruft der Morgenrot-Agent `kennzahlen` zweimal auf, einmal je Kanal, und bekommt diese Werte zurück:
+
+| Kanal | Klickrate | Klickpreis | Conversion-Rate | Kosten je Reservierung |
+|---|---:|---:|---:|---:|
+| Suchanzeigen | 4,0 % | 0,60 € | 12,5 % | 4,80 € |
+| Instagram | 0,8 % | 0,18 € | 4,25 % | 4,24 € |
+
+Instagram ist je Reservierung knapp günstiger, obwohl die Conversion-Rate dreimal schlechter ist. Der billige Klick gleicht das hier gerade noch aus. Ob aus einer Reservierung ein bezahltes Abo wird, zeigen diese Daten nicht.
+
+## Übertragen auf das eigene Unternehmen
+
+Der eigene Agent folgt demselben Muster, in drei Aufträgen an den Coding-Agenten. Vor jedem Auftrag lohnt ein Commit, damit sich ein misslungener Schritt zurücknehmen lässt.
+
+**1. Daten.** In den Ordner `daten` kommt eine Datei `kampagne.csv` mit einer Zeile je Kanal und diesen Spalten:
+
+```text
+kanal,kosten_eur,impressionen,klicks,abschluesse
+Newsletter,120,8000,320,24
+Instagram,250,90000,900,30
+```
+
+`abschluesse` ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Echte Kampagnenzahlen sind bei einem fremden Unternehmen nicht öffentlich. Dann werden plausible Zahlen erfunden, und in `kontext/unternehmen.md` steht dazu ein Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind erfunden.“
+
+**2. Werkzeug.**
+
+> Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py unter tools ein. Ändere sonst nichts.
+
+**3. Instruction mit Kontext.**
+
+> Ändere in my_agent/agent.py die Instruction. Sie besteht aus Rolle und Aufgabe für mein Unternehmen aus kontext/unternehmen.md, der Regel „Rechne nie selbst, rufe für jede Kennzahl das Werkzeug kennzahlen auf“ und einem festen Ausgabeformat. Hänge danach mit einer Funktion lies den Inhalt aller Dateien in kontext und der Datei AGENTS.md an, wie im Beispiel mit f-String und Path(__file__).resolve().parents[1]. Ändere sonst nichts.
+
+**Prüfpunkt:** Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach `uv run adk web` starten, `my_agent` wählen und fragen, wofür das Unternehmen steht. Die Antwort muss Angaben aus `unternehmen.md` enthalten. Wenn beides stimmt: committen und pushen.
+
+## Übung: drei Fragen, drei Beobachtungen
+
+Die Übung läuft mit dem eigenen Agenten. Für jede der drei Fragen wird festgehalten: die Frage, ob das Werkzeug aufgerufen wurde und mit welchem Argument, die Antwort und ein Urteil, ob die Antwort zur Rückgabe passt.
+
+1. Eine Frage nach der Klickrate eines Kanals aus der eigenen CSV. Erwartet: ein Aufruf mit genau diesem Kanal, die Zahl stimmt mit der eigenen Rechnung überein.
+2. Eine Frage nach einem Kanal, der nicht in der CSV steht, etwa „Wie läuft TikTok?“. Erwartet: Die Rückgabe enthält einen Fehler, und der Agent sagt, dass es dazu keine Daten gibt, statt Zahlen zu erfinden.
+3. „Was wäre der Klickpreis, wenn die Kosten 300 Euro betragen hätten?“ Das Werkzeug kennt nur die tatsächlichen Kosten. Hier zeigt sich, ob der Agent die Regel „Rechne nie selbst“ einhält oder doch im Kopf rechnet.
+
+**Prüfen:** Jede Beobachtung trennt, was im Event-Protokoll steht, von dem, was in der Antwort behauptet wird. Ein Screenshot einer überzeugenden Antwort ohne Werkzeugaufruf ist kein Beleg. Bei Frage 3 ist beides ein Ergebnis: Hält der Agent sich an die Regel, ist die Instruction stark genug. Rechnet er trotzdem, gehört eine schärfere Regel in die Instruction, etwa „Für hypothetische Zahlen gibt es kein Werkzeug. Sage, dass diese Rechnung nicht möglich ist.“ Die drei Beobachtungen kommen nach `ergebnisse/beobachtungen-kapitel-1.md`.
+
+**Hängen geblieben?** Wer 20 Minuten an derselben Stelle feststeckt, bucht einen [Besprechungstermin](https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J) (15 Minuten, online über Google Meet) und bringt die Fehlermeldung mit.
+
+## Häufige Fehler
+
+**Der Agent erscheint nicht in der Liste.** Im Agentenordner fehlt `__init__.py`, oder `uv run adk web` wurde im falschen Ordner gestartet. Das Terminal muss im Projektordner stehen, der `my_agent` enthält.
+
+**Der Agent ruft das Werkzeug nie auf.** Meist fehlt der Eintrag in `tools=[...]`, oder der Docstring beschreibt nicht, wofür die Funktion da ist. Eine Regel in der Instruction, die das Werkzeug beim Namen nennt, hilft zusätzlich.
+
+**Fehlermeldung zum API-Schlüssel.** Die Datei `.env` fehlt, liegt im falschen Ordner oder enthält noch den Platzhalter.
+
+**Die Zahlen stimmen nicht.** Dann liegt der Fehler im Python-Code, nicht beim Modell. Die Funktion lässt sich ohne Modell testen: `uv run python -c "from my_agent.tools import kennzahlen; print(kennzahlen('Instagram'))"`.
+
+**`KeyError` oder Fehler zu einer Variablen beim ersten Chat.** ADK liest Wörter in geschweiften Klammern in der Instruction als Platzhalter. Steht in einer Kontextdatei oder in `AGENTS.md` etwas wie `{{Name}}`, die Klammern entfernen.
+
+**`FileNotFoundError` beim Start.** Der Pfad in `lies` zeigt auf den falschen Ordner. Bei `my_agent/agent.py` muss dort `parents[1]` stehen.

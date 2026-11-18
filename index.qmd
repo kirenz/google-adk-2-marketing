@@ -1,0 +1,31 @@
+# Worum es geht {.unnumbered}
+
+Ein Sprachmodell schreibt gute Texte, rechnet aber unzuverlässig und kennt die Zahlen eines Unternehmens nicht. Ein Agent schließt diese Lücke. Er verbindet das Modell mit Regeln (der Instruction) und mit Werkzeugen, also Python-Funktionen, die Daten lesen und rechnen. Das Modell entscheidet, wann ein Werkzeug gebraucht wird. Gerechnet wird in Python.
+
+Dieses Buch baut solche Agenten mit Google ADK 2, dem Agent Development Kit von Google, Schritt für Schritt an einem Marketingfall. Jedes Kapitel hat ein lauffähiges Beispiel und eine Übung, die das Beispiel auf ein eigenes Unternehmen überträgt. Programmierkenntnisse sind keine Voraussetzung: Den Code schreibt ein Coding-Agent, etwa Antigravity oder Visual Studio Code mit Copilot. Beide funktionieren gleich, die Aufträge im Buch lassen sich in jeden der beiden Chats kopieren. Die eigene Aufgabe ist, den Code zu verstehen, Aufträge zu geben und Ergebnisse zu prüfen. Wie IDE, Coding-Agent, uv, Google ADK und GitHub zusammenhängen, zeigt die Seite [Werkzeuge im Überblick](https://kirenz.github.io/genai-web-analytics-ws2627/bausteine.html) auf der Kursseite.
+
+## Der Fall: Rösterei Morgenrot
+
+Zwei Gründerinnen verkaufen frisch gerösteten Kaffee im Abo, eine Lieferung kostet 27 Euro. Vor dem Start haben sie sechs Wochen lang Suchanzeigen und Instagram getestet. Die Zahlen liegen in `daten/kampagne.csv` und sind erfunden.
+
+| Kanal | Kosten | Impressionen | Klicks | Reservierungen |
+|---|---:|---:|---:|---:|
+| Suchanzeigen | 384 € | 16.000 | 640 | 80 |
+| Instagram | 216 € | 150.000 | 1.200 | 51 |
+
+Die Gründerin hält Instagram für den besseren Kanal, weil der Klick nur 0,18 Euro kostet. Die Mitgründerin will Zahlen sehen, bevor mehr Geld fließt. Der Agent in diesem Buch hilft bei genau dieser Frage.
+
+## Die Kapitel
+
+| Kapitel | Inhalt | Stand |
+|---|---|---|
+| 1 | [Der erste Agent mit einem Werkzeug](kapitel/01-erster-agent.qmd) | fertig |
+| 2 | [Ein Workflow aus festen Schritten](kapitel/02-workflow.qmd) | fertig |
+| 3 | Der Agent als App mit Gradio | folgt |
+| 4 | Ergebnisse prüfen | folgt |
+
+## Start
+
+**Im Kurs Generative AI & Web Analytics** wird ausschließlich im eigenen Projektordner `gwa26-agent-<nachname>` gearbeitet. Die Morgenrot-Beispiele in diesem Buch sind zum Lesen, Dateien und Daten legen Sie im eigenen Projekt selbst an. Wie er startklar wird, steht auf der Seite [Einrichtung](https://kirenz.github.io/genai-web-analytics-ws2627/einrichtung.html#adk) des Kurses, die Schritte mit empfohlenen Daten auf der Seite [Semesterprojekt](https://kirenz.github.io/genai-web-analytics-ws2627/projekt.html). Jedes Kapitel zeigt zuerst das Morgenrot-Beispiel zum Lesen und überträgt es dann mit Aufträgen an den Coding-Agenten auf das eigene Unternehmen. Wer feststeckt, bucht einen [Besprechungstermin](https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J) (15 Minuten, online über Google Meet).
+
+Die Beispiele nutzen google-adk 2.13.0 und Python 3.13. Im eigenen Projekt installiert `uv add google-adk` die aktuelle Version, die Befehle im Buch funktionieren damit genauso.
