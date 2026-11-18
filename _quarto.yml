@@ -28,6 +28,7 @@ book:
   chapters:
     - index.qmd
     - kapitel/01-erster-agent.qmd
+    - kapitel/02-workflow.qmd
 
 format:
   html:

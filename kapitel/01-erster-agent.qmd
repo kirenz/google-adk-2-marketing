@@ -2,6 +2,18 @@
 
 Die Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung günstiger bringt. Ein Chat mit einem Sprachmodell würde die Kennzahlen aus der Tabelle abschreiben und im Kopf rechnen, mal richtig, mal knapp daneben. Der Agent in diesem Kapitel rechnet nicht selbst. Er ruft eine Python-Funktion auf, die die Datei liest und die Kennzahlen berechnet, und formuliert aus dem Ergebnis die Antwort.
 
+**Ziel:** Ein eigener Agent beantwortet Fragen zu den eigenen Kennzahlen und holt die Zahlen dafür aus einem Werkzeug.
+
+## Vorher: das Projekt ist startklar
+
+Dieses Kapitel setzt einen Projektordner voraus. Die Liste hilft beim Prüfen, ob alles da ist. Fehlt ein Punkt, steht der Weg dazu auf der Einrichtungsseite des Kurses.
+
+- Der Projektordner ist in der Antigravity IDE geöffnet, und das Terminal der IDE steht in diesem Ordner.
+- `uv add google-adk` ist im Projektordner gelaufen. Ob das geklappt hat, zeigt `uv run adk --version`.
+- Ein Agentenordner existiert, angelegt mit `uv run adk create my_agent`. Darin liegen `__init__.py`, `agent.py` und `.env` mit dem eigenen Schlüssel.
+- `uv run adk web .` startet, und der Agent antwortet auf „Hallo!“.
+- Die Datei `.gitignore` enthält `.env` und `.venv`, das Projekt liegt in einem privaten GitHub-Repository.
+
 ## Drei Teile eines Agenten
 
 Ein Agent in Google ADK besteht aus drei Teilen. Das **Modell** (hier Gemini) versteht die Frage und schreibt die Antwort. Die **Instruction** legt fest, welche Rolle der Agent hat, welche Regeln gelten und wie die Ausgabe aussieht. Die **Werkzeuge** sind Python-Funktionen, die der Agent aufrufen darf.
@@ -113,7 +125,11 @@ Der eigene Agent folgt demselben Muster. Zuerst kommt eine CSV-Datei mit den Zah
 
 > Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in agent.py unter tools ein. Ändere sonst nichts.
 
-**Prüfen:** Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft.
+Danach bekommt die Instruction in `my_agent/agent.py` dieselben vier Teile wie im Beispiel: Rolle und Aufgabe für das eigene Unternehmen, die Regeln „Rechne nie selbst“, „Nutze nur Zahlen aus dem Werkzeug“ und „Kennzeichne Annahmen“, dazu ein festes Ausgabeformat.
+
+**Prüfpunkt:** Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft. Wenn beides stimmt: committen und pushen.
+
+**Hängen geblieben?** Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (Link auf der Kursseite) und bringt die Fehlermeldung mit.
 
 ## Häufige Fehler
 

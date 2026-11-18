@@ -27,3 +27,12 @@ def test_unbekannter_kanal():
 def test_agent_hat_werkzeug():
     assert root_agent.name == "morgenrot_agent"
     assert kennzahlen in root_agent.tools
+
+
+def test_workflow_bericht():
+    import asyncio
+    from beispiele.laufen import einmal
+    from beispiele.morgenrot_workflow.agent import root_agent as workflow
+    bericht = asyncio.run(einmal(workflow, "Bericht"))
+    assert "| Instagram | 0,80 % | 0,18 € | 4,25 % | 4,24 € |" in bericht
+    assert "Günstigster Kanal je Reservierung: Instagram" in bericht

@@ -1,0 +1,94 @@
+# Ein Workflow aus festen Schritten
+
+Der Agent aus Kapitel 1 entscheidet selbst, ob und wann er das Werkzeug aufruft. Bei einer offenen Frage ist das gewollt. Ein Wochenbericht soll aber jedes Mal gleich entstehen: Daten laden, Kennzahlen rechnen, Tabelle schreiben. Hier soll nichts entscheiden, sondern eine feste Reihenfolge ablaufen. Dafür gibt es in Google ADK 2 den **Workflow**.
+
+**Ziel:** Ein Workflow erzeugt aus `daten/kampagne.csv` einen Bericht, ohne Modell und ohne API-Schlüssel.
+
+## Agent oder Workflow
+
+| | Agent | Workflow |
+|---|---|---|
+| Wer bestimmt die Schritte? | das Modell, bei jedem Lauf neu | der Code, immer gleich |
+| Braucht ein Modell? | ja | nur, wenn ein Schritt eines aufruft |
+| Gut für | offene Fragen, Texte, Rückfragen | wiederkehrende Abläufe, Berichte, Prüfungen |
+| Ergebnis bei gleicher Eingabe | kann sich unterscheiden | gleich |
+
+Beides lässt sich verbinden: Ein Workflow kann einen Agenten als Schritt enthalten, etwa um am Ende einen Kommentar zum Bericht zu schreiben. Dieses Kapitel bleibt beim einfachsten Fall, einem Workflow nur aus Python-Funktionen.
+
+## Knoten und Kanten
+
+Ein Workflow besteht aus **Knoten** und **Kanten**. Ein Knoten ist ein Schritt, hier eine Python-Funktion. Eine Kante legt fest, welcher Schritt danach kommt. Was eine Funktion zurückgibt, bekommt der nächste Schritt als Eingabe `node_input`.
+
+```{mermaid}
+flowchart LR
+  S[START] --> L["laden<br/>CSV-Zeilen"]
+  L --> R["rechnen<br/>Kennzahlen je Kanal"]
+  R --> B["berichten<br/>Tabelle und Fazit"]
+```
+
+Der Code dazu steht in `beispiele/morgenrot_workflow/agent.py`. Der entscheidende Teil ist eine Zeile:
+
+```python
+from google.adk import Workflow
+from google.adk.workflow import START
+
+root_agent = Workflow(
+    name="morgenrot_workflow",
+    edges=[(START, laden, rechnen, berichten)],
+)
+```
+
+`START` markiert den Einstieg. Die drei Namen danach sind die eigenen Funktionen in genau dieser Reihenfolge. Die Variable heißt auch hier `root_agent`, damit ADK den Workflow findet.
+
+Die drei Schritte sind bewusst klein:
+
+- `laden` liest die Zeilen aus der CSV-Datei und gibt sie als Liste zurück.
+- `rechnen` ruft für jeden Kanal das Werkzeug `kennzahlen` aus Kapitel 1 auf. Dieselbe Funktion ist im Agenten ein Werkzeug und im Workflow ein Schritt. Eine richtige Formel muss so nur einmal stimmen.
+- `berichten` schreibt die Tabelle und nennt den Kanal mit den niedrigsten Kosten je Reservierung. Mit `yield Event(message=...)` erscheint der Text im Chat.
+
+## Starten und prüfen
+
+Der Workflow läuft im Terminal, ganz ohne Schlüssel:
+
+```bash
+uv run python -m beispiele.laufen
+```
+
+Erwartet wird diese Ausgabe:
+
+```text
+| Kanal | CTR | CPC | CR | Kosten je Reservierung |
+|---|---:|---:|---:|---:|
+| Suchanzeigen | 4,00 % | 0,60 € | 12,50 % | 4,80 € |
+| Instagram | 0,80 % | 0,18 € | 4,25 % | 4,24 € |
+
+Günstigster Kanal je Reservierung: Instagram. Quelle: daten/kampagne.csv
+```
+
+Alternativ erscheint `morgenrot_workflow` in `uv run adk web beispiele` neben dem Agenten. Unter **Events** ist dort jeder Knoten mit Eingabe und Ausgabe zu sehen. Ein zweiter Lauf liefert exakt dieselbe Tabelle, und genau das ist der Unterschied zum Agenten.
+
+## Übung: ein Schritt mehr
+
+Der Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Reservierung kostet. Dafür kommt zwischen `rechnen` und `berichten` ein neuer Schritt `pruefen`, der jedem Kanal ein Feld `warnung` (wahr oder falsch) hinzufügt. Ein Auftrag an Antigravity kann so lauten:
+
+> Füge in beispiele/morgenrot_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn kosten_je_reservierung_eur größer als 5 ist. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.
+
+**Prüfen:** Bei den Morgenrot-Zahlen erscheint keine Warnung, beide Kanäle liegen unter 5 Euro. Zum Test die Grenze vorübergehend auf 4,50 Euro setzen: Dann muss bei Suchanzeigen (4,80 €) eine Warnung erscheinen, bei Instagram (4,24 €) nicht. Danach im Diagramm oben den neuen Knoten ergänzen. Ein Schritt, der in `edges` fehlt, wird nie ausgeführt, auch wenn die Funktion im Code steht.
+
+## Übertragen auf das eigene Projekt
+
+Im eigenen Projekt entsteht ein zweiter Ordner neben `my_agent`, zum Beispiel `my_workflow`, mit `__init__.py` und `agent.py`. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1:
+
+> Lege den Ordner my_workflow mit __init__.py und agent.py an. Baue einen ADK-Workflow mit den Schritten laden, rechnen, berichten nach dem Muster aus beispiele/morgenrot_workflow. rechnen nutzt die Funktion aus my_agent/tools.py. berichten gibt eine Tabelle und einen Satz mit der Quelle aus.
+
+**Prüfpunkt:** `uv run adk web .` zeigt `my_workflow`, und zwei Läufe liefern dieselbe Tabelle. Danach committen und pushen.
+
+**Hängen geblieben?** Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (Link auf der Kursseite) und bringt die Fehlermeldung mit.
+
+## Häufige Fehler
+
+**`TypeError` in einem Schritt.** Der vorige Schritt gibt etwas anderes zurück, als der nächste erwartet, zum Beispiel eine einzelne Zahl statt einer Liste. Die Ausgabe jedes Knotens steht unter Events.
+
+**Der Bericht ist leer.** `berichten` gibt seinen Text mit `return` statt mit `yield Event(message=...)` zurück.
+
+**Der neue Schritt läuft nicht.** Er steht im Code, aber nicht in `edges`.

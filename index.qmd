@@ -20,7 +20,7 @@ Die Gründerin hält Instagram für den besseren Kanal, weil der Klick nur 0,18 
 | Kapitel | Inhalt | Stand |
 |---|---|---|
 | 1 | [Der erste Agent mit einem Werkzeug](kapitel/01-erster-agent.qmd) | fertig |
-| 2 | Ein Workflow aus festen Schritten | folgt |
+| 2 | [Ein Workflow aus festen Schritten](kapitel/02-workflow.qmd) | fertig |
 | 3 | Der Agent als App mit Gradio | folgt |
 | 4 | Ergebnisse prüfen | folgt |
 
