@@ -6,9 +6,9 @@ Die Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung g
 
 ## Vorher: das Projekt ist startklar
 
-Dieses Kapitel setzt einen Projektordner voraus. Die Liste hilft beim Prüfen, ob alles da ist. Fehlt ein Punkt, steht der Weg dazu auf der Einrichtungsseite des Kurses.
+Dieses Kapitel setzt einen Projektordner voraus. Die Liste hilft beim Prüfen, ob alles da ist. Fehlt ein Punkt, steht der Weg dazu auf der Einrichtungsseite des Kurses. Was welcher Baustein tut, zeigt die Seite [Werkzeuge im Überblick](https://kirenz.github.io/genai-web-analytics-ws2627/bausteine.html).
 
-- Der Projektordner ist in der Antigravity IDE geöffnet, und das Terminal der IDE steht in diesem Ordner.
+- Der Projektordner ist in der IDE geöffnet (Antigravity oder VS Code mit Copilot), und das Terminal der IDE steht in diesem Ordner.
 - `uv add google-adk` ist im Projektordner gelaufen. Ob das geklappt hat, zeigt `uv run adk --version`.
 - Ein Agentenordner existiert, angelegt mit `uv run adk create my_agent`. Darin liegen `__init__.py`, `agent.py` und `.env` mit dem eigenen Schlüssel.
 - `uv run adk web .` startet, und der Agent antwortet auf „Hallo!“.

@@ -69,7 +69,7 @@ Alternativ erscheint `morgenrot_workflow` in `uv run adk web beispiele` neben de
 
 ## Übung: ein Schritt mehr
 
-Der Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Reservierung kostet. Dafür kommt zwischen `rechnen` und `berichten` ein neuer Schritt `pruefen`, der jedem Kanal ein Feld `warnung` (wahr oder falsch) hinzufügt. Ein Auftrag an Antigravity kann so lauten:
+Der Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Reservierung kostet. Dafür kommt zwischen `rechnen` und `berichten` ein neuer Schritt `pruefen`, der jedem Kanal ein Feld `warnung` (wahr oder falsch) hinzufügt. Ein Auftrag an den Coding-Agenten (Antigravity oder Copilot in VS Code) kann so lauten:
 
 > Füge in beispiele/morgenrot_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn kosten_je_reservierung_eur größer als 5 ist. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.
 
