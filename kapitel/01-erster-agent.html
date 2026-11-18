@@ -165,6 +165,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="../kapitel/02-workflow.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Ein Workflow aus festen Schritten</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../kapitel/03-webdienst.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Ein Werkzeug, das einen Webdienst abfragt</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -370,7 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre class="text"><code>kanal,kosten_eur,impressionen,klicks,abschluesse
 Newsletter,120,8000,320,24
 Instagram,250,90000,900,30</code></pre>
-<p><code>abschluesse</code> ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Für das zweite Werkzeug im Kurs (ROAS, also Umsatz ÷ Werbekosten) kommt später eine Spalte <code>umsatz_eur</code> dazu. Wer mag, legt sie schon jetzt an, das Werkzeug aus diesem Kapitel ignoriert sie. Bei einem erfundenen Unternehmen legen Sie die Zahlen selbst fest. Bei einem echten Unternehmen sind Kampagnenzahlen meist nicht öffentlich. Dann tragen Sie plausible Schätzungen ein und schreiben in <code>kontext/unternehmen.md</code> einen Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind geschätzt.“</p>
+<p><code>abschluesse</code> ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Mit einer zusätzlichen Spalte <code>umsatz_eur</code> kann das Werkzeug auch den ROAS rechnen, also Umsatz ÷ Werbekosten. Bei einem erfundenen Unternehmen legen Sie die Zahlen selbst fest. Bei einem echten Unternehmen sind Kampagnenzahlen meist nicht öffentlich. Dann tragen Sie plausible Schätzungen ein und schreiben in <code>kontext/unternehmen.md</code> einen Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind geschätzt.“</p>
 <p><strong>2. Werkzeug.</strong></p>
 <blockquote class="blockquote">
 <p>Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py unter tools ein. Ändere sonst nichts.</p>

@@ -24,7 +24,7 @@
     "href": "index.html#die-kapitel",
     "title": "Google ADK 2 im Marketing",
     "section": "Die Kapitel",
-    "text": "Die Kapitel\n\n\n\nKapitel\nInhalt\nStand\n\n\n\n\n1\nDer erste Agent mit einem Werkzeug\nfertig\n\n\n2\nEin Workflow aus festen Schritten\nfertig\n\n\n3\nDer Agent als App mit Gradio\nfolgt\n\n\n4\nErgebnisse prüfen\nfolgt",
+    "text": "Die Kapitel\n\n\n\nKapitel\nInhalt\nStand\n\n\n\n\n1\nDer erste Agent mit einem Werkzeug\nfertig\n\n\n2\nEin Workflow aus festen Schritten\nfertig\n\n\n3\nEin Werkzeug, das einen Webdienst abfragt\nfertig\n\n\n4\nDer Agent als App mit Gradio\nfolgt\n\n\n5\nErgebnisse prüfen\nfolgt",
     "crumbs": [
       "Worum es geht"
     ]
@@ -34,7 +34,7 @@
     "href": "index.html#start",
     "title": "Google ADK 2 im Marketing",
     "section": "Start",
-    "text": "Start\nIm Kurs Generative AI & Web Analytics wird ausschließlich im eigenen Projektordner gwa26-agent-&lt;nachname&gt; gearbeitet. Die Morgenrot-Beispiele in diesem Buch sind zum Lesen, Dateien und Daten legen Sie im eigenen Projekt selbst an. Wie er startklar wird, steht auf der Seite Einrichtung des Kurses, die Schritte mit empfohlenen Daten auf der Seite Semesterprojekt. Jedes Kapitel zeigt zuerst das Morgenrot-Beispiel zum Lesen und überträgt es dann mit Aufträgen an den Coding-Agenten auf das eigene Unternehmen. Wer feststeckt, bucht einen Besprechungstermin (15 Minuten, online über Google Meet).\nDie Beispiele nutzen google-adk 2.13.0 und Python 3.13. Im eigenen Projekt installiert uv add google-adk die aktuelle Version, die Befehle im Buch funktionieren damit genauso.",
+    "text": "Start\nIm Kurs Generative AI & Web Analytics arbeiten Sie im eigenen Projektordner gwa26-agent-&lt;nachname&gt;. Wie er startklar wird, steht auf der Seite Einrichtung des Kurses, die Schritte mit empfohlenen Daten auf der Seite Semesterprojekt. Jedes Kapitel zeigt zuerst das Morgenrot-Beispiel zum Lesen und überträgt es dann mit Aufträgen an den Coding-Agenten auf das eigene Unternehmen. Wer feststeckt, bucht einen Besprechungstermin (15 Minuten, online über Google Meet).\nDie Beispiele nutzen google-adk 2.13.0 und Python 3.13. Im eigenen Projekt installiert uv add google-adk die aktuelle Version, die Befehle im Buch funktionieren damit genauso.",
     "crumbs": [
       "Worum es geht"
     ]
@@ -114,7 +114,7 @@
     "href": "kapitel/01-erster-agent.html#übertragen-auf-das-eigene-unternehmen",
     "title": "Der erste Agent mit einem Werkzeug",
     "section": "Übertragen auf das eigene Unternehmen",
-    "text": "Übertragen auf das eigene Unternehmen\nDer eigene Agent folgt demselben Muster, in drei Aufträgen an den Coding-Agenten. Vor jedem Auftrag lohnt ein Commit, damit sich ein misslungener Schritt zurücknehmen lässt.\n1. Daten. In den Ordner daten kommt eine Datei kampagne.csv mit einer Zeile je Kanal und diesen Spalten:\nkanal,kosten_eur,impressionen,klicks,abschluesse\nNewsletter,120,8000,320,24\nInstagram,250,90000,900,30\nabschluesse ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Für das zweite Werkzeug im Kurs (ROAS, also Umsatz ÷ Werbekosten) kommt später eine Spalte umsatz_eur dazu. Wer mag, legt sie schon jetzt an, das Werkzeug aus diesem Kapitel ignoriert sie. Bei einem erfundenen Unternehmen legen Sie die Zahlen selbst fest. Bei einem echten Unternehmen sind Kampagnenzahlen meist nicht öffentlich. Dann tragen Sie plausible Schätzungen ein und schreiben in kontext/unternehmen.md einen Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind geschätzt.“\n2. Werkzeug.\n\nLies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py unter tools ein. Ändere sonst nichts.\n\n3. Instruction mit Kontext.\n\nÄndere in my_agent/agent.py die Instruction. Sie besteht aus Rolle und Aufgabe für mein Unternehmen aus kontext/unternehmen.md, der Regel „Rechne nie selbst, rufe für jede Kennzahl das Werkzeug kennzahlen auf“, den Regeln „Nutze nur Fakten aus dem Kontext und aus den Rückgaben der Werkzeuge“ und „Kennzeichne Annahmen mit ‚Annahme:’“ und einem festen Ausgabeformat. Hänge danach mit einer Funktion lies den Inhalt aller Dateien in kontext und der Datei AGENTS.md an, wie im Beispiel mit f-String und Path(file).resolve().parents[1]. Ändere sonst nichts.\n\nPrüfpunkt: Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach uv run adk web starten, my_agent wählen und fragen, wofür das Unternehmen steht. Die Antwort muss Angaben aus unternehmen.md enthalten. In der Instruction stehen die beiden Regeln zu Fakten und Annahmen, sie zählen in der Bewertung des Kurses (Kriterium A2). Wenn alles stimmt: committen und pushen.",
+    "text": "Übertragen auf das eigene Unternehmen\nDer eigene Agent folgt demselben Muster, in drei Aufträgen an den Coding-Agenten. Vor jedem Auftrag lohnt ein Commit, damit sich ein misslungener Schritt zurücknehmen lässt.\n1. Daten. In den Ordner daten kommt eine Datei kampagne.csv mit einer Zeile je Kanal und diesen Spalten:\nkanal,kosten_eur,impressionen,klicks,abschluesse\nNewsletter,120,8000,320,24\nInstagram,250,90000,900,30\nabschluesse ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Mit einer zusätzlichen Spalte umsatz_eur kann das Werkzeug auch den ROAS rechnen, also Umsatz ÷ Werbekosten. Bei einem erfundenen Unternehmen legen Sie die Zahlen selbst fest. Bei einem echten Unternehmen sind Kampagnenzahlen meist nicht öffentlich. Dann tragen Sie plausible Schätzungen ein und schreiben in kontext/unternehmen.md einen Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind geschätzt.“\n2. Werkzeug.\n\nLies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py unter tools ein. Ändere sonst nichts.\n\n3. Instruction mit Kontext.\n\nÄndere in my_agent/agent.py die Instruction. Sie besteht aus Rolle und Aufgabe für mein Unternehmen aus kontext/unternehmen.md, der Regel „Rechne nie selbst, rufe für jede Kennzahl das Werkzeug kennzahlen auf“, den Regeln „Nutze nur Fakten aus dem Kontext und aus den Rückgaben der Werkzeuge“ und „Kennzeichne Annahmen mit ‚Annahme:’“ und einem festen Ausgabeformat. Hänge danach mit einer Funktion lies den Inhalt aller Dateien in kontext und der Datei AGENTS.md an, wie im Beispiel mit f-String und Path(file).resolve().parents[1]. Ändere sonst nichts.\n\nPrüfpunkt: Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach uv run adk web starten, my_agent wählen und fragen, wofür das Unternehmen steht. Die Antwort muss Angaben aus unternehmen.md enthalten. In der Instruction stehen die beiden Regeln zu Fakten und Annahmen, sie zählen in der Bewertung des Kurses (Kriterium A2). Wenn alles stimmt: committen und pushen.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
     ]
@@ -207,6 +207,66 @@
     "text": "Häufige Fehler\nTypeError in einem Schritt. Der vorige Schritt gibt etwas anderes zurück, als der nächste erwartet, zum Beispiel eine einzelne Zahl statt einer Liste. Die Ausgabe jedes Knotens steht unter Events.\nDer Bericht ist leer. berichten gibt seinen Text mit return statt mit yield Event(message=...) zurück.\nDer neue Schritt läuft nicht. Er steht im Code, aber nicht in edges.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/03-webdienst.html",
+    "href": "kapitel/03-webdienst.html",
+    "title": "Ein Werkzeug, das einen Webdienst abfragt",
+    "section": "",
+    "text": "Der Dienst: Feiertage bei Nager.Date\nDas Werkzeug aus Kapitel 1 rechnet mit Zahlen, die im Projektordner liegen. Viele Fragen im Marketing brauchen aber Daten von außen: Wann sind Feiertage, wie wird das Wetter, wie steht ein Wechselkurs? Solche Daten liefern Webdienste über eine Programmierschnittstelle (API). Das Werkzeug schickt eine Anfrage an eine Adresse im Netz und bekommt strukturierte Daten zurück, meist im Format JSON.\nZiel: Ein zweites Werkzeug im eigenen Agenten fragt einen kostenfreien Webdienst ab, gibt das Ergebnis aufbereitet zurück und meldet einen Ausfall des Dienstes verständlich.\nVoraussetzung: Kapitel 1 ist erledigt, der eigene Agent startet mit uv run adk web und ruft das Werkzeug kennzahlen auf.\nNager.Date liefert die gesetzlichen Feiertage vieler Länder. Der Dienst ist kostenfrei und braucht keinen API-Schlüssel. Eine Anfrage ist eine gewöhnliche Adresse, die sich auch im Browser öffnen lässt:\nDE ist der Ländercode (ISO 3166-1, zum Beispiel AT oder CH), 2026 das Jahr. Zurück kommt eine Liste, ein Eintrag sieht so aus:\nsubdivisionCodes nennt die Bundesländer, in denen ein Feiertag gilt, etwa [\"DE-BW\", \"DE-BY\"]. Steht dort null, gilt er im ganzen Land.\nFür Morgenrot ist die Frage praktisch: Eine Kampagne für das Kaffee-Abo soll nicht an einem langen Wochenende starten, an dem viele verreist sind. Der Agent soll sagen können, welche Feiertage in einem Zeitraum liegen.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ein Werkzeug, das einen Webdienst abfragt</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/03-webdienst.html#der-dienst-feiertage-bei-nager.date",
+    "href": "kapitel/03-webdienst.html#der-dienst-feiertage-bei-nager.date",
+    "title": "Ein Werkzeug, das einen Webdienst abfragt",
+    "section": "",
+    "text": "https://nagerholidays.com/api/v4/Holidays/DE/2026\n\n{\"date\": \"2026-01-01\", \"name\": \"New Year's Day\", \"countryCode\": \"DE\",\n \"nationalHoliday\": true, \"subdivisionCodes\": null, \"holidayTypes\": [\"Public\"]}",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ein Werkzeug, das einen Webdienst abfragt</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/03-webdienst.html#das-werkzeug",
+    "href": "kapitel/03-webdienst.html#das-werkzeug",
+    "title": "Ein Werkzeug, das einen Webdienst abfragt",
+    "section": "Das Werkzeug",
+    "text": "Das Werkzeug\nDie Funktion braucht kein zusätzliches Paket. urllib.request gehört zu Python. Die Kopfzeile User-Agent nennt dem Dienst den Absender, manche Dienste lehnen Anfragen ohne sie ab. Wichtig sind außerdem zwei Dinge, die beim Rechnen mit einer CSV keine Rolle spielen: ein Zeitlimit, damit der Agent nicht hängt, wenn der Dienst nicht antwortet, und eine Fehlerbehandlung, die statt eines Absturzes eine Meldung zurückgibt.\nimport json\nimport urllib.request\n\n\ndef feiertage(land: str, jahr: int) -&gt; dict:\n    \"\"\"Fragt die gesetzlichen Feiertage eines Landes bei Nager.Date ab.\n\n    Args:\n        land: Ländercode nach ISO 3166-1, z. B. \"DE\", \"AT\" oder \"CH\".\n        jahr: Jahr als Zahl, z. B. 2026.\n\n    Returns:\n        Ein Dictionary mit der Liste \"feiertage\" (Datum, Name, Gebiet)\n        und der Quelle. Ist der Dienst nicht erreichbar oder der\n        Ländercode unbekannt, enthält es den Schlüssel \"fehler\".\n    \"\"\"\n    url = f\"https://nagerholidays.com/api/v4/Holidays/{land.upper()}/{jahr}\"\n    anfrage = urllib.request.Request(url, headers={\"User-Agent\": \"gwa26-agent\"})\n    try:\n        with urllib.request.urlopen(anfrage, timeout=10) as antwort:\n            daten = json.load(antwort)\n    except Exception as fehler:\n        return {\"fehler\": f\"Nager.Date nicht erreichbar oder Eingabe ungültig: {fehler}\",\n                \"quelle\": url}\n    if not daten:\n        return {\"fehler\": f\"Keine Feiertage für {land} {jahr} gefunden.\", \"quelle\": url}\n    liste = [{\"datum\": f[\"date\"], \"name\": f[\"name\"],\n              \"gebiet\": f.get(\"subdivisionCodes\") or \"ganzes Land\"} for f in daten]\n    return {\"feiertage\": liste, \"quelle\": url}\nDie Rückgabe nennt die Quelle, damit der Agent sie in der Antwort angeben kann. Die Namen kommen vom Dienst auf Englisch. Das Modell übersetzt sie bei Bedarf selbst, die Daten bleiben unverändert.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ein Werkzeug, das einen Webdienst abfragt</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/03-webdienst.html#übertragen-auf-das-eigene-unternehmen",
+    "href": "kapitel/03-webdienst.html#übertragen-auf-das-eigene-unternehmen",
+    "title": "Ein Werkzeug, das einen Webdienst abfragt",
+    "section": "Übertragen auf das eigene Unternehmen",
+    "text": "Übertragen auf das eigene Unternehmen\nDer Dienst muss nicht Nager.Date sein. Er muss kostenfrei sein, ohne API-Schlüssel funktionieren und zur Marketingaufgabe des eigenen Agenten passen. Zwei weitere Beispiele:\n\n\n\n\n\n\n\n\nDienst\nAdresse (Beispiel)\nPasst für\n\n\n\n\nOpen-Meteo, Wetter\nhttps://api.open-meteo.com/v1/forecast?latitude=48.78&longitude=9.18&daily=temperature_2m_max&timezone=Europe/Berlin\nsaisonale Angebote, Außengastronomie, Veranstaltungen\n\n\nFrankfurter, EZB-Wechselkurse\nhttps://api.frankfurter.app/latest?from=EUR&to=USD,CHF\nPreise und Budgets in anderen Währungen\n\n\n\n1. Dienst prüfen. Die Adresse im Browser öffnen. Kommt JSON zurück, ohne dass eine Anmeldung verlangt wird, passt der Dienst.\n2. Werkzeug.\n\nSchreibe in my_agent/tools.py eine Funktion feiertage(land: str, jahr: int), die mit urllib.request die Adresse https://nagerholidays.com/api/v4/Holidays/{land}/{jahr} abfragt, mit dem Header User-Agent „gwa26-agent“ und timeout=10. Gib ein Dictionary mit der Liste feiertage (datum, name, gebiet aus subdivisionCodes, sonst „ganzes Land“) und der Quelle zurück. Fange jeden Fehler mit try und except ab und gib dann ein Dictionary mit dem Schlüssel fehler zurück, ebenso bei einer leeren Liste. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py zusätzlich unter tools ein. Ändere sonst nichts.\n\nWer einen anderen Dienst nutzt, ersetzt im Auftrag Namen, Adresse und Felder.\n3. Instruction ergänzen.\n\nErgänze in my_agent/agent.py die Instruction um die Regel „Für Feiertage rufe das Werkzeug feiertage auf und nenne die Quelle.“ Ändere sonst nichts.\n\nPrüfpunkt: Die Funktion ohne Modell testen:\nuv run python -c \"from my_agent.tools import feiertage; print(feiertage('DE', 2026))\"\nEin Datum aus der Ausgabe mit der Adresse im Browser vergleichen. Danach einen Fehler erzwingen, etwa mit dem Ländercode XX. Die Ausgabe muss ein Dictionary mit fehler sein, kein Traceback. Zum Schluss uv run adk web starten und fragen: „Welche Feiertage liegen im Mai 2026 in Baden-Württemberg?“ Unter Events muss ein Aufruf von feiertage stehen. Wenn alles stimmt: committen und pushen.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ein Werkzeug, das einen Webdienst abfragt</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/03-webdienst.html#übung-wenn-der-dienst-schweigt",
+    "href": "kapitel/03-webdienst.html#übung-wenn-der-dienst-schweigt",
+    "title": "Ein Werkzeug, das einen Webdienst abfragt",
+    "section": "Übung: wenn der Dienst schweigt",
+    "text": "Übung: wenn der Dienst schweigt\nEin Webdienst kann ausfallen, gerade am Tag einer Vorführung. Die Übung prüft, ob der Agent dann ehrlich bleibt.\n\nIn tools.py vorübergehend die Adresse verfälschen, etwa nagerholidays.com durch nagerholidays.invalid ersetzen.\nIm Chat nach den Feiertagen im Dezember fragen.\nFesthalten: Was steht in der Rückgabe unter Events, und was sagt der Agent?\n\nPrüfen: Der Agent sagt, dass der Dienst nicht erreichbar ist, und nennt keine Feiertage aus dem Gedächtnis. Nennt er trotzdem Daten, gehört eine Regel in die Instruction wie „Liefert ein Werkzeug einen Fehler, nenne den Fehler und keine eigenen Angaben.“ Danach die Adresse zurücksetzen.\nHängen geblieben? Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (15 Minuten, online über Google Meet) und bringt die Fehlermeldung mit.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ein Werkzeug, das einen Webdienst abfragt</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/03-webdienst.html#häufige-fehler",
+    "href": "kapitel/03-webdienst.html#häufige-fehler",
+    "title": "Ein Werkzeug, das einen Webdienst abfragt",
+    "section": "Häufige Fehler",
+    "text": "Häufige Fehler\nHTTP Error 404. Ländercode oder Jahr stimmen nicht, oder die Adresse hat einen Tippfehler. Die Adresse aus der Fehlermeldung im Browser öffnen.\nURLError oder Zeitüberschreitung. Kein Netz oder der Dienst antwortet nicht. Im HdM-WLAN hilft manchmal ein zweiter Versuch. Das Werkzeug muss in diesem Fall eine Meldung zurückgeben, nicht abstürzen.\nSSL: CERTIFICATE_VERIFY_FAILED (Mac). Python findet die Zertifikate nicht. Abhilfe: uv add certifi und im Code urllib.request.urlopen(url, timeout=10, context=ssl.create_default_context(cafile=certifi.where())) mit import ssl, certifi.\nDer Agent ruft das Werkzeug nicht auf. Es fehlt in tools=[...], oder der Docstring sagt nicht, wofür die Funktion da ist.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Ein Werkzeug, das einen Webdienst abfragt</span>"
     ]
   }
 ]
