@@ -131,7 +131,7 @@ Instagram ist je Reservierung knapp günstiger, obwohl die Conversion-Rate dreim
 
 Der eigene Agent folgt demselben Muster, in drei Aufträgen an den Coding-Agenten. Vor jedem Auftrag lohnt ein Commit, damit sich ein misslungener Schritt zurücknehmen lässt.
 
-**1. Daten.** In den Ordner `daten` kommt eine Datei `kampagne.csv` mit einer Zeile je Kanal und diesen Spalten:
+[**1. Daten.**]{#eigene-daten} In den Ordner `daten` kommt eine Datei `kampagne.csv` mit einer Zeile je Kanal und diesen Spalten:
 
 ```text
 kanal,kosten_eur,impressionen,klicks,abschluesse
@@ -139,7 +139,7 @@ Newsletter,120,8000,320,24
 Instagram,250,90000,900,30
 ```
 
-`abschluesse` ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Für das zweite Werkzeug im Kurs (ROAS, also Umsatz ÷ Werbekosten) kommt später eine Spalte `umsatz_eur` dazu. Wer mag, legt sie schon jetzt an, das Werkzeug aus diesem Kapitel ignoriert sie. Echte Kampagnenzahlen sind bei einem fremden Unternehmen nicht öffentlich. Dann werden plausible Zahlen erfunden, und in `kontext/unternehmen.md` steht dazu ein Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind erfunden.“
+`abschluesse` ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Für das zweite Werkzeug im Kurs (ROAS, also Umsatz ÷ Werbekosten) kommt später eine Spalte `umsatz_eur` dazu. Wer mag, legt sie schon jetzt an, das Werkzeug aus diesem Kapitel ignoriert sie. Bei einem erfundenen Unternehmen legen Sie die Zahlen selbst fest. Bei einem echten Unternehmen sind Kampagnenzahlen meist nicht öffentlich. Dann tragen Sie plausible Schätzungen ein und schreiben in `kontext/unternehmen.md` einen Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind geschätzt.“
 
 **2. Werkzeug.**
 
