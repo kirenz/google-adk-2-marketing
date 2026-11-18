@@ -24,7 +24,7 @@
     "href": "index.html#die-kapitel",
     "title": "Google ADK 2 im Marketing",
     "section": "Die Kapitel",
-    "text": "Die Kapitel\n\n\n\nKapitel\nInhalt\nStand\n\n\n\n\n1\nDer erste Agent mit einem Werkzeug\nfertig\n\n\n2\nEin Workflow aus festen Schritten\nfolgt\n\n\n3\nDer Agent als App mit Gradio\nfolgt\n\n\n4\nErgebnisse prüfen\nfolgt",
+    "text": "Die Kapitel\n\n\n\nKapitel\nInhalt\nStand\n\n\n\n\n1\nDer erste Agent mit einem Werkzeug\nfertig\n\n\n2\nEin Workflow aus festen Schritten\nfertig\n\n\n3\nDer Agent als App mit Gradio\nfolgt\n\n\n4\nErgebnisse prüfen\nfolgt",
     "crumbs": [
       "Worum es geht"
     ]
@@ -44,7 +44,27 @@
     "href": "kapitel/01-erster-agent.html",
     "title": "Der erste Agent mit einem Werkzeug",
     "section": "",
-    "text": "Drei Teile eines Agenten\nDie Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung günstiger bringt. Ein Chat mit einem Sprachmodell würde die Kennzahlen aus der Tabelle abschreiben und im Kopf rechnen, mal richtig, mal knapp daneben. Der Agent in diesem Kapitel rechnet nicht selbst. Er ruft eine Python-Funktion auf, die die Datei liest und die Kennzahlen berechnet, und formuliert aus dem Ergebnis die Antwort.\nEin Agent in Google ADK besteht aus drei Teilen. Das Modell (hier Gemini) versteht die Frage und schreibt die Antwort. Die Instruction legt fest, welche Rolle der Agent hat, welche Regeln gelten und wie die Ausgabe aussieht. Die Werkzeuge sind Python-Funktionen, die der Agent aufrufen darf.\nflowchart LR\n  F[\"Frage&lt;br/&gt;Was kostet eine Reservierung&lt;br/&gt;über Instagram?\"] --&gt; M[\"Modell&lt;br/&gt;entscheidet: Werkzeug nötig\"]\n  M --&gt; W[\"Werkzeug kennzahlen&lt;br/&gt;liest daten/kampagne.csv&lt;br/&gt;und rechnet\"]\n  W --&gt; M2[\"Modell&lt;br/&gt;formuliert die Antwort&lt;br/&gt;aus der Rückgabe\"]\n  M2 --&gt; A[\"Antwort mit Tabelle&lt;br/&gt;und Quelle\"]\nWichtig ist die Arbeitsteilung: Das Modell entscheidet, ob und mit welchem Argument ein Werkzeug aufgerufen wird. Was dabei herauskommt, bestimmt allein der Python-Code. Eine falsche Formel im Werkzeug liefert also zuverlässig falsche Zahlen, und eine gute Instruction rettet das nicht.",
+    "text": "Vorher: das Projekt ist startklar\nDie Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung günstiger bringt. Ein Chat mit einem Sprachmodell würde die Kennzahlen aus der Tabelle abschreiben und im Kopf rechnen, mal richtig, mal knapp daneben. Der Agent in diesem Kapitel rechnet nicht selbst. Er ruft eine Python-Funktion auf, die die Datei liest und die Kennzahlen berechnet, und formuliert aus dem Ergebnis die Antwort.\nZiel: Ein eigener Agent beantwortet Fragen zu den eigenen Kennzahlen und holt die Zahlen dafür aus einem Werkzeug.\nDieses Kapitel setzt einen Projektordner voraus. Die Liste hilft beim Prüfen, ob alles da ist. Fehlt ein Punkt, steht der Weg dazu auf der Einrichtungsseite des Kurses.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#vorher-das-projekt-ist-startklar",
+    "href": "kapitel/01-erster-agent.html#vorher-das-projekt-ist-startklar",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "",
+    "text": "Der Projektordner ist in der Antigravity IDE geöffnet, und das Terminal der IDE steht in diesem Ordner.\nuv add google-adk ist im Projektordner gelaufen. Ob das geklappt hat, zeigt uv run adk --version.\nEin Agentenordner existiert, angelegt mit uv run adk create my_agent. Darin liegen __init__.py, agent.py und .env mit dem eigenen Schlüssel.\nuv run adk web . startet, und der Agent antwortet auf „Hallo!“.\nDie Datei .gitignore enthält .env und .venv, das Projekt liegt in einem privaten GitHub-Repository.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#drei-teile-eines-agenten",
+    "href": "kapitel/01-erster-agent.html#drei-teile-eines-agenten",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Drei Teile eines Agenten",
+    "text": "Drei Teile eines Agenten\nEin Agent in Google ADK besteht aus drei Teilen. Das Modell (hier Gemini) versteht die Frage und schreibt die Antwort. Die Instruction legt fest, welche Rolle der Agent hat, welche Regeln gelten und wie die Ausgabe aussieht. Die Werkzeuge sind Python-Funktionen, die der Agent aufrufen darf.\n\n\n\n\n\nflowchart LR\n  F[\"Frage&lt;br/&gt;Was kostet eine Reservierung&lt;br/&gt;über Instagram?\"] --&gt; M[\"Modell&lt;br/&gt;entscheidet: Werkzeug nötig\"]\n  M --&gt; W[\"Werkzeug kennzahlen&lt;br/&gt;liest daten/kampagne.csv&lt;br/&gt;und rechnet\"]\n  W --&gt; M2[\"Modell&lt;br/&gt;formuliert die Antwort&lt;br/&gt;aus der Rückgabe\"]\n  M2 --&gt; A[\"Antwort mit Tabelle&lt;br/&gt;und Quelle\"]\n\n\n\n\n\n\nWichtig ist die Arbeitsteilung: Das Modell entscheidet, ob und mit welchem Argument ein Werkzeug aufgerufen wird. Was dabei herauskommt, bestimmt allein der Python-Code. Eine falsche Formel im Werkzeug liefert also zuverlässig falsche Zahlen, und eine gute Instruction rettet das nicht.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
     ]
@@ -104,7 +124,7 @@
     "href": "kapitel/01-erster-agent.html#übertragen-auf-ein-eigenes-unternehmen",
     "title": "Der erste Agent mit einem Werkzeug",
     "section": "Übertragen auf ein eigenes Unternehmen",
-    "text": "Übertragen auf ein eigenes Unternehmen\nDer eigene Agent folgt demselben Muster. Zuerst kommt eine CSV-Datei mit den Zahlen des eigenen Unternehmens in den Ordner daten, bei einem erfundenen Unternehmen mit dem Vermerk, dass die Zahlen erfunden sind. Danach erhält der Coding-Agent einen Auftrag wie diesen:\n\nLies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in agent.py unter tools ein. Ändere sonst nichts.\n\nPrüfen: Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft.",
+    "text": "Übertragen auf ein eigenes Unternehmen\nDer eigene Agent folgt demselben Muster. Zuerst kommt eine CSV-Datei mit den Zahlen des eigenen Unternehmens in den Ordner daten, bei einem erfundenen Unternehmen mit dem Vermerk, dass die Zahlen erfunden sind. Danach erhält der Coding-Agent einen Auftrag wie diesen:\n\nLies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in agent.py unter tools ein. Ändere sonst nichts.\n\nDanach bekommt die Instruction in my_agent/agent.py dieselben vier Teile wie im Beispiel: Rolle und Aufgabe für das eigene Unternehmen, die Regeln „Rechne nie selbst“, „Nutze nur Zahlen aus dem Werkzeug“ und „Kennzeichne Annahmen“, dazu ein festes Ausgabeformat.\nPrüfpunkt: Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft. Wenn beides stimmt: committen und pushen.\nHängen geblieben? Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (Link auf der Kursseite) und bringt die Fehlermeldung mit.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
     ]
@@ -117,6 +137,76 @@
     "text": "Häufige Fehler\nDer Agent erscheint nicht in der Liste. Im Agentenordner fehlt __init__.py, oder adk web wurde im falschen Ordner gestartet. Der Befehl braucht den Ordner, der die Agentenordner enthält.\nDer Agent ruft das Werkzeug nie auf. Meist fehlt der Eintrag in tools=[...], oder der Docstring beschreibt nicht, wofür die Funktion da ist. Eine Regel in der Instruction, die das Werkzeug beim Namen nennt, hilft zusätzlich.\nFehlermeldung zum API-Schlüssel. Die Datei .env fehlt, liegt im falschen Ordner oder enthält noch den Platzhalter.\nDie Zahlen stimmen nicht. Dann liegt der Fehler im Python-Code, nicht beim Modell. Die Funktion lässt sich ohne Modell testen, im Beispiel mit uv run pytest.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/02-workflow.html",
+    "href": "kapitel/02-workflow.html",
+    "title": "Ein Workflow aus festen Schritten",
+    "section": "",
+    "text": "Agent oder Workflow\nDer Agent aus Kapitel 1 entscheidet selbst, ob und wann er das Werkzeug aufruft. Bei einer offenen Frage ist das gewollt. Ein Wochenbericht soll aber jedes Mal gleich entstehen: Daten laden, Kennzahlen rechnen, Tabelle schreiben. Hier soll nichts entscheiden, sondern eine feste Reihenfolge ablaufen. Dafür gibt es in Google ADK 2 den Workflow.\nZiel: Ein Workflow erzeugt aus daten/kampagne.csv einen Bericht, ohne Modell und ohne API-Schlüssel.\nBeides lässt sich verbinden: Ein Workflow kann einen Agenten als Schritt enthalten, etwa um am Ende einen Kommentar zum Bericht zu schreiben. Dieses Kapitel bleibt beim einfachsten Fall, einem Workflow nur aus Python-Funktionen.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/02-workflow.html#agent-oder-workflow",
+    "href": "kapitel/02-workflow.html#agent-oder-workflow",
+    "title": "Ein Workflow aus festen Schritten",
+    "section": "",
+    "text": "Agent\nWorkflow\n\n\n\n\nWer bestimmt die Schritte?\ndas Modell, bei jedem Lauf neu\nder Code, immer gleich\n\n\nBraucht ein Modell?\nja\nnur, wenn ein Schritt eines aufruft\n\n\nGut für\noffene Fragen, Texte, Rückfragen\nwiederkehrende Abläufe, Berichte, Prüfungen\n\n\nErgebnis bei gleicher Eingabe\nkann sich unterscheiden\ngleich",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/02-workflow.html#knoten-und-kanten",
+    "href": "kapitel/02-workflow.html#knoten-und-kanten",
+    "title": "Ein Workflow aus festen Schritten",
+    "section": "Knoten und Kanten",
+    "text": "Knoten und Kanten\nEin Workflow besteht aus Knoten und Kanten. Ein Knoten ist ein Schritt, hier eine Python-Funktion. Eine Kante legt fest, welcher Schritt danach kommt. Was eine Funktion zurückgibt, bekommt der nächste Schritt als Eingabe node_input.\n\n\n\n\n\nflowchart LR\n  S[START] --&gt; L[\"laden&lt;br/&gt;CSV-Zeilen\"]\n  L --&gt; R[\"rechnen&lt;br/&gt;Kennzahlen je Kanal\"]\n  R --&gt; B[\"berichten&lt;br/&gt;Tabelle und Fazit\"]\n\n\n\n\n\n\nDer Code dazu steht in beispiele/morgenrot_workflow/agent.py. Der entscheidende Teil ist eine Zeile:\nfrom google.adk import Workflow\nfrom google.adk.workflow import START\n\nroot_agent = Workflow(\n    name=\"morgenrot_workflow\",\n    edges=[(START, laden, rechnen, berichten)],\n)\nSTART markiert den Einstieg. Die drei Namen danach sind die eigenen Funktionen in genau dieser Reihenfolge. Die Variable heißt auch hier root_agent, damit ADK den Workflow findet.\nDie drei Schritte sind bewusst klein:\n\nladen liest die Zeilen aus der CSV-Datei und gibt sie als Liste zurück.\nrechnen ruft für jeden Kanal das Werkzeug kennzahlen aus Kapitel 1 auf. Dieselbe Funktion ist im Agenten ein Werkzeug und im Workflow ein Schritt. Eine richtige Formel muss so nur einmal stimmen.\nberichten schreibt die Tabelle und nennt den Kanal mit den niedrigsten Kosten je Reservierung. Mit yield Event(message=...) erscheint der Text im Chat.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/02-workflow.html#starten-und-prüfen",
+    "href": "kapitel/02-workflow.html#starten-und-prüfen",
+    "title": "Ein Workflow aus festen Schritten",
+    "section": "Starten und prüfen",
+    "text": "Starten und prüfen\nDer Workflow läuft im Terminal, ganz ohne Schlüssel:\nuv run python -m beispiele.laufen\nErwartet wird diese Ausgabe:\n| Kanal | CTR | CPC | CR | Kosten je Reservierung |\n|---|---:|---:|---:|---:|\n| Suchanzeigen | 4,00 % | 0,60 € | 12,50 % | 4,80 € |\n| Instagram | 0,80 % | 0,18 € | 4,25 % | 4,24 € |\n\nGünstigster Kanal je Reservierung: Instagram. Quelle: daten/kampagne.csv\nAlternativ erscheint morgenrot_workflow in uv run adk web beispiele neben dem Agenten. Unter Events ist dort jeder Knoten mit Eingabe und Ausgabe zu sehen. Ein zweiter Lauf liefert exakt dieselbe Tabelle, und genau das ist der Unterschied zum Agenten.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/02-workflow.html#übung-ein-schritt-mehr",
+    "href": "kapitel/02-workflow.html#übung-ein-schritt-mehr",
+    "title": "Ein Workflow aus festen Schritten",
+    "section": "Übung: ein Schritt mehr",
+    "text": "Übung: ein Schritt mehr\nDer Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Reservierung kostet. Dafür kommt zwischen rechnen und berichten ein neuer Schritt pruefen, der jedem Kanal ein Feld warnung (wahr oder falsch) hinzufügt. Ein Auftrag an Antigravity kann so lauten:\n\nFüge in beispiele/morgenrot_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn kosten_je_reservierung_eur größer als 5 ist. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.\n\nPrüfen: Bei den Morgenrot-Zahlen erscheint keine Warnung, beide Kanäle liegen unter 5 Euro. Zum Test die Grenze vorübergehend auf 4,50 Euro setzen: Dann muss bei Suchanzeigen (4,80 €) eine Warnung erscheinen, bei Instagram (4,24 €) nicht. Danach im Diagramm oben den neuen Knoten ergänzen. Ein Schritt, der in edges fehlt, wird nie ausgeführt, auch wenn die Funktion im Code steht.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/02-workflow.html#übertragen-auf-das-eigene-projekt",
+    "href": "kapitel/02-workflow.html#übertragen-auf-das-eigene-projekt",
+    "title": "Ein Workflow aus festen Schritten",
+    "section": "Übertragen auf das eigene Projekt",
+    "text": "Übertragen auf das eigene Projekt\nIm eigenen Projekt entsteht ein zweiter Ordner neben my_agent, zum Beispiel my_workflow, mit __init__.py und agent.py. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1:\n\nLege den Ordner my_workflow mit init.py und agent.py an. Baue einen ADK-Workflow mit den Schritten laden, rechnen, berichten nach dem Muster aus beispiele/morgenrot_workflow. rechnen nutzt die Funktion aus my_agent/tools.py. berichten gibt eine Tabelle und einen Satz mit der Quelle aus.\n\nPrüfpunkt: uv run adk web . zeigt my_workflow, und zwei Läufe liefern dieselbe Tabelle. Danach committen und pushen.\nHängen geblieben? Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (Link auf der Kursseite) und bringt die Fehlermeldung mit.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/02-workflow.html#häufige-fehler",
+    "href": "kapitel/02-workflow.html#häufige-fehler",
+    "title": "Ein Workflow aus festen Schritten",
+    "section": "Häufige Fehler",
+    "text": "Häufige Fehler\nTypeError in einem Schritt. Der vorige Schritt gibt etwas anderes zurück, als der nächste erwartet, zum Beispiel eine einzelne Zahl statt einer Liste. Die Ausgabe jedes Knotens steht unter Events.\nDer Bericht ist leer. berichten gibt seinen Text mit return statt mit yield Event(message=...) zurück.\nDer neue Schritt läuft nicht. Er steht im Code, aber nicht in edges.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Ein Workflow aus festen Schritten</span>"
     ]
   }
 ]

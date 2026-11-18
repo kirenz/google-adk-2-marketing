@@ -65,6 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../kapitel/02-workflow.html" rel="next">
 <link href="../index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -159,6 +160,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="../kapitel/01-erster-agent.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Der erste Agent mit einem Werkzeug</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../kapitel/02-workflow.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Ein Workflow aus festen Schritten</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -169,7 +175,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Inhaltsverzeichnis</h2>
    
   <ul>
-  <li><a href="#drei-teile-eines-agenten" id="toc-drei-teile-eines-agenten" class="nav-link active" data-scroll-target="#drei-teile-eines-agenten">Drei Teile eines Agenten</a></li>
+  <li><a href="#vorher-das-projekt-ist-startklar" id="toc-vorher-das-projekt-ist-startklar" class="nav-link active" data-scroll-target="#vorher-das-projekt-ist-startklar">Vorher: das Projekt ist startklar</a></li>
+  <li><a href="#drei-teile-eines-agenten" id="toc-drei-teile-eines-agenten" class="nav-link" data-scroll-target="#drei-teile-eines-agenten">Drei Teile eines Agenten</a></li>
   <li><a href="#der-projektordner" id="toc-der-projektordner" class="nav-link" data-scroll-target="#der-projektordner">Der Projektordner</a></li>
   <li><a href="#das-werkzeug-eine-funktion-mit-beschreibung" id="toc-das-werkzeug-eine-funktion-mit-beschreibung" class="nav-link" data-scroll-target="#das-werkzeug-eine-funktion-mit-beschreibung">Das Werkzeug: eine Funktion mit Beschreibung</a></li>
   <li><a href="#der-agent-instruction-als-prüfbare-regeln" id="toc-der-agent-instruction-als-prüfbare-regeln" class="nav-link" data-scroll-target="#der-agent-instruction-als-prüfbare-regeln">Der Agent: Instruction als prüfbare Regeln</a></li>
@@ -203,6 +210,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Die Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung günstiger bringt. Ein Chat mit einem Sprachmodell würde die Kennzahlen aus der Tabelle abschreiben und im Kopf rechnen, mal richtig, mal knapp daneben. Der Agent in diesem Kapitel rechnet nicht selbst. Er ruft eine Python-Funktion auf, die die Datei liest und die Kennzahlen berechnet, und formuliert aus dem Ergebnis die Antwort.</p>
+<p><strong>Ziel:</strong> Ein eigener Agent beantwortet Fragen zu den eigenen Kennzahlen und holt die Zahlen dafür aus einem Werkzeug.</p>
+<section id="vorher-das-projekt-ist-startklar" class="level2">
+<h2 class="anchored" data-anchor-id="vorher-das-projekt-ist-startklar">Vorher: das Projekt ist startklar</h2>
+<p>Dieses Kapitel setzt einen Projektordner voraus. Die Liste hilft beim Prüfen, ob alles da ist. Fehlt ein Punkt, steht der Weg dazu auf der Einrichtungsseite des Kurses.</p>
+<ul>
+<li>Der Projektordner ist in der Antigravity IDE geöffnet, und das Terminal der IDE steht in diesem Ordner.</li>
+<li><code>uv add google-adk</code> ist im Projektordner gelaufen. Ob das geklappt hat, zeigt <code>uv run adk --version</code>.</li>
+<li>Ein Agentenordner existiert, angelegt mit <code>uv run adk create my_agent</code>. Darin liegen <code>__init__.py</code>, <code>agent.py</code> und <code>.env</code> mit dem eigenen Schlüssel.</li>
+<li><code>uv run adk web .</code> startet, und der Agent antwortet auf „Hallo!“.</li>
+<li>Die Datei <code>.gitignore</code> enthält <code>.env</code> und <code>.venv</code>, das Projekt liegt in einem privaten GitHub-Repository.</li>
+</ul>
+</section>
 <section id="drei-teile-eines-agenten" class="level2">
 <h2 class="anchored" data-anchor-id="drei-teile-eines-agenten">Drei Teile eines Agenten</h2>
 <p>Ein Agent in Google ADK besteht aus drei Teilen. Das <strong>Modell</strong> (hier Gemini) versteht die Frage und schreibt die Antwort. Die <strong>Instruction</strong> legt fest, welche Rolle der Agent hat, welche Regeln gelten und wie die Ausgabe aussieht. Die <strong>Werkzeuge</strong> sind Python-Funktionen, die der Agent aufrufen darf.</p>
@@ -334,7 +353,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p>Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in agent.py unter tools ein. Ändere sonst nichts.</p>
 </blockquote>
-<p><strong>Prüfen:</strong> Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft.</p>
+<p>Danach bekommt die Instruction in <code>my_agent/agent.py</code> dieselben vier Teile wie im Beispiel: Rolle und Aufgabe für das eigene Unternehmen, die Regeln „Rechne nie selbst“, „Nutze nur Zahlen aus dem Werkzeug“ und „Kennzeichne Annahmen“, dazu ein festes Ausgabeformat.</p>
+<p><strong>Prüfpunkt:</strong> Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft. Wenn beides stimmt: committen und pushen.</p>
+<p><strong>Hängen geblieben?</strong> Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (Link auf der Kursseite) und bringt die Fehlermeldung mit.</p>
 </section>
 <section id="häufige-fehler" class="level2">
 <h2 class="anchored" data-anchor-id="häufige-fehler">Häufige Fehler</h2>
@@ -754,6 +775,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../kapitel/02-workflow.html" class="pagination-link" aria-label="Ein Workflow aus festen Schritten">
+        <span class="nav-page-text"><span class="chapter-title">Ein Workflow aus festen Schritten</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
