@@ -1,6 +1,8 @@
 # Ein Workflow aus festen Schritten
 
-Der Agent aus Kapitel 1 entscheidet selbst, ob und wann er das Werkzeug aufruft. Bei einer offenen Frage ist das gewollt. Ein Wochenbericht soll aber jedes Mal gleich entstehen: Daten laden, Kennzahlen rechnen, Tabelle schreiben. Hier soll nichts entscheiden, sondern eine feste Reihenfolge ablaufen. Dafür gibt es in Google ADK 2 den **Workflow**.
+Der Agent aus Kapitel 1 entscheidet selbst, ob und wann er das Werkzeug aufruft. Bei einer offenen Frage ist das gewollt.
+
+Ein Wochenbericht soll aber jedes Mal gleich entstehen: Daten laden, Kennzahlen rechnen, Tabelle schreiben. Hier soll nichts entscheiden, sondern eine feste Reihenfolge ablaufen. Dafür gibt es in Google ADK 2 den **Workflow**.
 
 **Ziel:** Ein Workflow im eigenen Projekt erzeugt aus `daten/kampagne.csv` einen Bericht, ohne Modell und ohne API-Schlüssel.
 
@@ -19,7 +21,9 @@ Beides lässt sich verbinden: Ein Workflow kann einen Agenten als Schritt enthal
 
 ## Knoten und Kanten
 
-Ein Workflow besteht aus **Knoten** und **Kanten**. Ein Knoten ist ein Schritt, hier eine Python-Funktion. Eine Kante legt fest, welcher Schritt danach kommt. Was eine Funktion zurückgibt, bekommt der nächste Schritt als Eingabe `node_input`.
+Ein Workflow besteht aus **Knoten** und **Kanten**. Ein Knoten ist ein Schritt, hier eine Python-Funktion. Eine Kante legt fest, welcher Schritt danach kommt.
+
+Was eine Funktion zurückgibt, bekommt der nächste Schritt als Eingabe `node_input`.
 
 ```{mermaid}
 %%{init: {"themeVariables": {"fontSize": "18px"}}}%%
@@ -49,6 +53,57 @@ Die drei Schritte sind bewusst klein:
 - `rechnen` ruft für jeden Kanal das Werkzeug `kennzahlen` aus Kapitel 1 auf. Dieselbe Funktion ist im Agenten ein Werkzeug und im Workflow ein Schritt. Eine richtige Formel muss so nur einmal stimmen.
 - `berichten` schreibt die Tabelle und nennt den Kanal mit den niedrigsten Kosten je Reservierung. Mit `yield Event(message=...)` erscheint der Text im Chat.
 
+So sieht der vollständige Morgenrot-Workflow aus. Er liegt in einer einzigen Datei `agent.py` im Ordner `morgenrot_workflow`, daneben eine `__init__.py` mit der Zeile `from . import agent`, genau wie beim Agenten aus Kapitel 1:
+
+```python
+"""Ein Workflow aus festen Schritten: kein Modell, kein API-Schlüssel."""
+import csv
+from pathlib import Path
+
+from google.adk import Event, Workflow
+from google.adk.workflow import START
+
+from beispiele.morgenrot_agent.tools import kennzahlen
+
+DATEN = Path(__file__).resolve().parents[2] / "daten" / "kampagne.csv"
+
+
+def laden(node_input: str) -> list[dict]:
+    """Liest alle Zeilen aus daten/kampagne.csv. Die Eingabe wird nicht gebraucht."""
+    with DATEN.open(encoding="utf-8") as datei:
+        return list(csv.DictReader(datei))
+
+
+def rechnen(node_input: list[dict]) -> list[dict]:
+    """Ruft für jeden Kanal dasselbe Werkzeug auf, das auch der Agent aus Kapitel 1 nutzt."""
+    return [kennzahlen(zeile["kanal"]) for zeile in node_input]
+
+
+def zahl(wert: float) -> str:
+    """Schreibt eine Zahl mit zwei Nachkommastellen und Dezimalkomma."""
+    return f"{wert:.2f}".replace(".", ",")
+
+
+def berichten(node_input: list[dict]):
+    """Schreibt eine Tabelle und nennt den Kanal mit den niedrigsten Kosten je Reservierung."""
+    zeilen = ["| Kanal | CTR | CPC | CR | Kosten je Reservierung |", "|---|---:|---:|---:|---:|"]
+    for k in node_input:
+        zeilen.append(
+            f"| {k['kanal']} | {zahl(k['klickrate_prozent'])} % | {zahl(k['klickpreis_eur'])} € "
+            f"| {zahl(k['conversion_rate_prozent'])} % | {zahl(k['kosten_je_reservierung_eur'])} € |"
+        )
+    guenstigster = min(node_input, key=lambda k: k["kosten_je_reservierung_eur"])
+    zeilen.append("")
+    zeilen.append(f"Günstigster Kanal je Reservierung: {guenstigster['kanal']}. Quelle: daten/kampagne.csv")
+    yield Event(message="\n".join(zeilen))
+    yield Event(output=node_input)
+
+
+root_agent = Workflow(name="morgenrot_workflow", edges=[(START, laden, rechnen, berichten)])
+```
+
+Jede der drei Funktionen bekommt `node_input` und gibt etwas zurück. `laden` braucht seine Eingabe nicht, weil es immer dieselbe Datei liest. `zahl` ist nur eine Hilfsfunktion für das Dezimalkomma und steht deshalb nicht in `edges`. Im eigenen Projekt lautet der Import des Werkzeugs `from my_agent.tools import kennzahlen`.
+
 ## Was der Morgenrot-Workflow ausgibt
 
 Mit den Morgenrot-Zahlen liefert der Workflow diese Ausgabe:
@@ -66,19 +121,55 @@ Ein zweiter Lauf liefert exakt dieselbe Tabelle, und genau das ist der Unterschi
 
 ## Übertragen auf das eigene Projekt
 
-Im eigenen Projekt entsteht ein zweiter Ordner neben `my_agent`, nämlich `my_workflow`. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1. Da der Coding-Agent das Morgenrot-Beispiel nicht sieht, beschreibt der Auftrag das Muster vollständig:
+Im eigenen Projekt entsteht ein zweiter Ordner neben `my_agent`, nämlich `my_workflow`. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1. Danach sieht der Projektordner so aus:
 
-> Lege den Ordner my_workflow mit __init__.py und agent.py an. In __init__.py steht `from . import agent`. Baue in agent.py einen Workflow mit Google ADK 2 aus drei Funktionen: laden liest daten/kampagne.csv und gibt die Zeilen als Liste zurück. rechnen bekommt diese Liste als node_input und ruft für jeden Kanal die Funktion kennzahlen aus my_agent/tools.py auf. berichten bekommt die Ergebnisse als node_input, baut eine Markdown-Tabelle mit allen Kennzahlen und einen Satz mit dem günstigsten Kanal je Abschluss und der Quelle, und gibt den Text mit `yield Event(message=text)` aus. Am Ende steht `root_agent = Workflow(name="my_workflow", edges=[(START, laden, rechnen, berichten)])`. Importe: `from google.adk import Event, Workflow` und `from google.adk.workflow import START`. Ändere nichts in my_agent.
+```text
+mein-projekt/
+├── my_agent/
+│   ├── __init__.py
+│   ├── agent.py
+│   └── tools.py        ← Werkzeug kennzahlen aus Kapitel 1
+├── my_workflow/        ← neu
+│   ├── __init__.py
+│   └── agent.py
+├── daten/
+│   └── kampagne.csv
+└── kontext/
+```
 
-Gestartet wird wie in Kapitel 1 mit `uv run adk web`, oben links steht jetzt zusätzlich `my_workflow`. Eine beliebige Nachricht wie „Bericht“ startet den Lauf. Unter **Events** ist jeder Knoten mit Eingabe und Ausgabe zu sehen.
+**1. Workflow bauen lassen.** Der Coding-Agent sieht das Morgenrot-Beispiel nicht. Deshalb beschreibt der Auftrag das Muster vollständig, also Ordner, Dateien, die drei Funktionen, die Kanten und die Importe:
 
-**Prüfpunkt:** Die Tabelle enthält alle Kanäle aus der eigenen CSV, und die Werte stimmen mit dem Werkzeug aus Kapitel 1 überein. Zwei Läufe liefern dieselbe Tabelle. Danach committen und pushen.
+```{.text .prompt}
+Lies my_agent/tools.py und daten/kampagne.csv. Lege den Ordner my_workflow neben my_agent an, mit den Dateien __init__.py und agent.py. In __init__.py steht nur die Zeile from . import agent. Baue in agent.py einen Workflow mit Google ADK 2 aus drei Funktionen, die jeweils den Parameter node_input haben: laden liest daten/kampagne.csv mit csv.DictReader und gibt die Zeilen als Liste zurück. rechnen bekommt diese Liste als node_input und ruft für jede Zeile die Funktion kennzahlen aus my_agent.tools mit dem Kanal auf. berichten bekommt die Ergebnisse als node_input, baut eine Markdown-Tabelle mit allen Kennzahlen aus der Rückgabe von kennzahlen und einen Satz mit dem günstigsten Kanal je Abschluss und der Quelle daten/kampagne.csv, und gibt den Text mit yield Event(message=text) aus. Am Ende steht root_agent = Workflow(name="my_workflow", edges=[(START, laden, rechnen, berichten)]). Importe: from google.adk import Event, Workflow und from google.adk.workflow import START. Ändere nichts in my_agent.
+```
+
+Danach `my_workflow/agent.py` öffnen und mit dem Morgenrot-Code oben vergleichen. Es müssen die drei Funktionen und die Zeile mit `edges` darin stehen. Die Namen der Spalten dürfen anders heißen, weil sie aus dem eigenen Werkzeug kommen.
+
+**2. Ohne Chat prüfen.** Der Workflow braucht kein Modell. Deshalb lassen sich die ersten beiden Schritte direkt im Terminal ausführen:
+
+```bash
+uv run python -c "from my_workflow.agent import laden, rechnen; print(rechnen(laden('')))"
+```
+
+Die Ausgabe ist eine Liste mit einem Dictionary je Kanal. Die Werte müssen dieselben sein wie bei einem Aufruf von `kennzahlen` aus Kapitel 1.
+
+**3. Im Chat starten.** Läuft noch ein Server aus Kapitel 1, diesen im Terminal mit Ctrl + C (Mac) oder Strg + C (Windows) stoppen. Dann neu starten:
+
+```bash
+uv run adk web
+```
+
+Die angezeigte Adresse öffnen und oben links `my_workflow` statt `my_agent` wählen. Eine beliebige Nachricht wie „Bericht“ startet den Lauf, die Nachricht selbst wird nicht ausgewertet. Im Chat erscheint die Tabelle. Unter **Events** steht jeder Knoten mit seiner Eingabe und Ausgabe, in der Reihenfolge `laden`, `rechnen`, `berichten`.
+
+**Prüfpunkt:** Die Tabelle enthält alle Kanäle aus der eigenen CSV, und die Werte stimmen mit dem Werkzeug aus Kapitel 1 überein. Ein zweiter Lauf mit einer anderen Nachricht liefert dieselbe Tabelle. Wenn alles stimmt: committen und pushen.
 
 ## Übung: ein Schritt mehr
 
 Der Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Abschluss kostet. Dafür kommt zwischen `rechnen` und `berichten` ein neuer Schritt `pruefen`, der jedem Kanal ein Feld `warnung` (wahr oder falsch) hinzufügt. Ein Auftrag an den Coding-Agenten (Antigravity oder Copilot in VS Code) kann so lauten:
 
-> Füge in my_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn die Kosten je Abschluss größer als 5 Euro sind. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.
+```{.text .prompt}
+Füge in my_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn die Kosten je Abschluss größer als 5 Euro sind. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.
+```
 
 **Prüfen:** Die Grenze so wählen, dass genau ein Kanal darüber liegt, zum Beispiel vorübergehend knapp unter dem teuersten Kanal. Dann muss genau bei diesem Kanal „Achtung“ erscheinen. Danach die Grenze auf 5 Euro zurücksetzen. Ein Schritt, der in `edges` fehlt, wird nie ausgeführt, auch wenn die Funktion im Code steht.
 
