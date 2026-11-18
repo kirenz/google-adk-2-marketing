@@ -179,10 +179,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#drei-teile-eines-agenten" id="toc-drei-teile-eines-agenten" class="nav-link" data-scroll-target="#drei-teile-eines-agenten">Drei Teile eines Agenten</a></li>
   <li><a href="#der-projektordner" id="toc-der-projektordner" class="nav-link" data-scroll-target="#der-projektordner">Der Projektordner</a></li>
   <li><a href="#das-werkzeug-eine-funktion-mit-beschreibung" id="toc-das-werkzeug-eine-funktion-mit-beschreibung" class="nav-link" data-scroll-target="#das-werkzeug-eine-funktion-mit-beschreibung">Das Werkzeug: eine Funktion mit Beschreibung</a></li>
-  <li><a href="#der-agent-instruction-als-prüfbare-regeln" id="toc-der-agent-instruction-als-prüfbare-regeln" class="nav-link" data-scroll-target="#der-agent-instruction-als-prüfbare-regeln">Der Agent: Instruction als prüfbare Regeln</a></li>
-  <li><a href="#starten-und-beobachten" id="toc-starten-und-beobachten" class="nav-link" data-scroll-target="#starten-und-beobachten">Starten und beobachten</a></li>
+  <li><a href="#der-agent-instruction-aus-kontext-und-regeln" id="toc-der-agent-instruction-aus-kontext-und-regeln" class="nav-link" data-scroll-target="#der-agent-instruction-aus-kontext-und-regeln">Der Agent: Instruction aus Kontext und Regeln</a></li>
+  <li><a href="#was-beim-start-zu-sehen-ist" id="toc-was-beim-start-zu-sehen-ist" class="nav-link" data-scroll-target="#was-beim-start-zu-sehen-ist">Was beim Start zu sehen ist</a></li>
+  <li><a href="#übertragen-auf-das-eigene-unternehmen" id="toc-übertragen-auf-das-eigene-unternehmen" class="nav-link" data-scroll-target="#übertragen-auf-das-eigene-unternehmen">Übertragen auf das eigene Unternehmen</a></li>
   <li><a href="#übung-drei-fragen-drei-beobachtungen" id="toc-übung-drei-fragen-drei-beobachtungen" class="nav-link" data-scroll-target="#übung-drei-fragen-drei-beobachtungen">Übung: drei Fragen, drei Beobachtungen</a></li>
-  <li><a href="#übertragen-auf-ein-eigenes-unternehmen" id="toc-übertragen-auf-ein-eigenes-unternehmen" class="nav-link" data-scroll-target="#übertragen-auf-ein-eigenes-unternehmen">Übertragen auf ein eigenes Unternehmen</a></li>
   <li><a href="#häufige-fehler" id="toc-häufige-fehler" class="nav-link" data-scroll-target="#häufige-fehler">Häufige Fehler</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/kirenz/google-adk-2-marketing/blob/main/kapitel/01-erster-agent.qmd" class="toc-action"><i class="bi bi-github"></i>Quellcode anzeigen</a></li><li><a href="https://github.com/kirenz/google-adk-2-marketing/issues/new" class="toc-action"><i class="bi empty"></i>Problem melden</a></li></ul></div></nav>
@@ -218,9 +218,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Der Projektordner ist in der IDE geöffnet (Antigravity oder VS Code mit Copilot), und das Terminal der IDE steht in diesem Ordner.</li>
 <li><code>uv add google-adk</code> ist im Projektordner gelaufen. Ob das geklappt hat, zeigt <code>uv run adk --version</code>.</li>
 <li>Ein Agentenordner existiert, angelegt mit <code>uv run adk create my_agent</code>. Darin liegen <code>__init__.py</code>, <code>agent.py</code> und <code>.env</code> mit dem eigenen Schlüssel.</li>
-<li><code>uv run adk web .</code> startet, und der Agent antwortet auf „Hallo!“.</li>
+<li><code>uv run adk web</code> startet, und der Agent antwortet auf „Hallo!“.</li>
 <li>Die Datei <code>.gitignore</code> enthält <code>.env</code> und <code>.venv</code>, das Projekt liegt in einem privaten GitHub-Repository.</li>
+<li>Die Dateien in <code>kontext</code> und <code>AGENTS.md</code> sind ausgefüllt (Schritt „Kontext und Regeln“ auf der Projektseite des Kurses).</li>
 </ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Hinweis</span>Beispiel lesen, im eigenen Projekt bauen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Das Morgenrot-Beispiel liegt im Repository dieses Buchs, nicht im eigenen Projektordner. Der Code, der zum Verstehen nötig ist, steht vollständig im Kapitel. Gebaut und ausprobiert wird nur im eigenen Projekt, ab dem Abschnitt „Übertragen auf das eigene Unternehmen“.</p>
+</div>
+</div>
 </section>
 <section id="drei-teile-eines-agenten" class="level2">
 <h2 class="anchored" data-anchor-id="drei-teile-eines-agenten">Drei Teile eines Agenten</h2>
@@ -245,16 +259,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="der-projektordner" class="level2">
 <h2 class="anchored" data-anchor-id="der-projektordner">Der Projektordner</h2>
-<pre class="text"><code>google-adk-2-marketing/
-├── .env                     API-Schlüssel, nie committen
+<p>Im eigenen Projekt sieht der Ordner nach diesem Kapitel so aus. Im Morgenrot-Beispiel heißt der Agentenordner <code>morgenrot_agent</code>, sonst ist der Aufbau gleich.</p>
+<pre class="text"><code>gwa26-agent-&lt;nachname&gt;/
+├── AGENTS.md            Beschreibung und Regeln, fließen in die Instruction
+├── kontext/             unternehmen.md, zielgruppe.md, ...
 ├── daten/
-│   └── kampagne.csv         Kosten, Impressionen, Klicks, Reservierungen je Kanal
-└── beispiele/
-    └── morgenrot_agent/
-        ├── __init__.py      macht den Ordner für ADK auffindbar
-        ├── agent.py         root_agent mit Instruction und Werkzeugen
-        └── tools.py         die Werkzeuge als Python-Funktionen</code></pre>
-<p>ADK sucht in jedem Unterordner von <code>beispiele</code> nach einer Variablen <code>root_agent</code>. Der Ordnername ist der Name, unter dem der Agent später in der Oberfläche erscheint. Fehlt <code>__init__.py</code>, taucht der Agent dort nicht auf.</p>
+│   └── kampagne.csv     Zahlen, die das Werkzeug auswertet
+└── my_agent/
+    ├── __init__.py      macht den Ordner für ADK auffindbar
+    ├── .env             API-Schlüssel, nie committen
+    ├── agent.py         root_agent mit Instruction und Werkzeugen
+    └── tools.py         die Werkzeuge als Python-Funktionen</code></pre>
+<p><code>uv run adk web</code> sucht in jedem Unterordner des Projekts nach einer Variablen <code>root_agent</code>. Der Ordnername ist der Name, unter dem der Agent in der Oberfläche erscheint. Fehlt <code>__init__.py</code>, taucht der Agent dort nicht auf.</p>
 </section>
 <section id="das-werkzeug-eine-funktion-mit-beschreibung" class="level2">
 <h2 class="anchored" data-anchor-id="das-werkzeug-eine-funktion-mit-beschreibung">Das Werkzeug: eine Funktion mit Beschreibung</h2>
@@ -272,35 +288,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">        unbekannt, enthält es den Schlüssel "fehler" und die Liste der</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">        vorhandenen Kanäle.</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Der Rumpf der Funktion liest die Zeile des Kanals und rechnet mit den bekannten Formeln: Klickrate = Klicks ÷ Impressionen, Klickpreis = Kosten ÷ Klicks, Conversion-Rate = Reservierungen ÷ Klicks, Kosten je Reservierung = Kosten ÷ Reservierungen. Zurück kommt ein Dictionary mit den Werten und der Quelle. Für einen unbekannten Kanal gibt die Funktion keine erfundene Zahl zurück, sondern eine Fehlermeldung mit den vorhandenen Kanälen. So kann der Agent nachfragen, statt zu raten. Der vollständige Code steht in <code>beispiele/morgenrot_agent/tools.py</code>.</p>
+<p>Der Rumpf der Funktion liest die Zeile des Kanals und rechnet mit den bekannten Formeln: Klickrate = Klicks ÷ Impressionen, Klickpreis = Kosten ÷ Klicks, Conversion-Rate = Reservierungen ÷ Klicks, Kosten je Reservierung = Kosten ÷ Reservierungen. Zurück kommt ein Dictionary mit den Werten und der Quelle. Für einen unbekannten Kanal gibt die Funktion keine erfundene Zahl zurück, sondern eine Fehlermeldung mit den vorhandenen Kanälen. So kann der Agent nachfragen, statt zu raten.</p>
 </section>
-<section id="der-agent-instruction-als-prüfbare-regeln" class="level2">
-<h2 class="anchored" data-anchor-id="der-agent-instruction-als-prüfbare-regeln">Der Agent: Instruction als prüfbare Regeln</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>root_agent <span class="op">=</span> Agent(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"morgenrot_agent"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>os.getenv(<span class="st">"GEMINI_MODEL"</span>, <span class="st">"gemini-flash-latest"</span>),</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Wertet die Werbekanäle der Rösterei Morgenrot aus."</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    instruction<span class="op">=</span><span class="st">"""</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">Rolle: Du unterstützt die Gründerinnen der Rösterei Morgenrot</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">(Kaffee-Abo, 27 Euro je Lieferung) bei der Auswertung ihrer Werbung.</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">Aufgabe: Beantworte Fragen zu den Kanälen Suchanzeigen und Instagram.</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">Regeln:</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">- Rechne nie selbst. Rufe für jede Kennzahl das Werkzeug kennzahlen auf.</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">- Nutze nur Zahlen aus der Rückgabe des Werkzeugs. Fehlt eine Zahl, sage das.</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="st">- Kennzeichne jede eigene Einschätzung mit „Annahme:“.</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="st">Ausgabe: höchstens fünf Sätze, danach eine Tabelle mit den Kennzahlen</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">und die Quelle aus der Rückgabe.</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    tools<span class="op">=</span>[kennzahlen],</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>tools=[kennzahlen]</code> trägt die Funktion als Werkzeug ein. Ohne diesen Eintrag kennt der Agent sie nicht, auch wenn sie in <code>tools.py</code> steht.</p>
-<p>Die Instruction hat vier Teile: Rolle, Aufgabe, Regeln, Ausgabe. „Sei hilfreich“ wäre keine Regel, weil sich nicht prüfen lässt, ob sie eingehalten wurde. „Rechne nie selbst, rufe das Werkzeug auf“ lässt sich dagegen an jedem Lauf prüfen: Entweder taucht der Werkzeugaufruf auf oder nicht. Gute Regeln sind so formuliert, dass eine zweite Person sie ohne Rückfrage abhaken kann.</p>
+<section id="der-agent-instruction-aus-kontext-und-regeln" class="level2">
+<h2 class="anchored" data-anchor-id="der-agent-instruction-aus-kontext-und-regeln">Der Agent: Instruction aus Kontext und Regeln</h2>
+<p>Die Instruction sagt dem Modell, wer es ist, was es tun soll und woran es sich hält. Damit der Agent das eigene Unternehmen kennt, kommt der Inhalt der Kontextdateien und der <code>AGENTS.md</code> direkt in die Instruction. Der Agent liest diese Dateien nicht von selbst. Der Coding-Agent in der IDE liest <code>AGENTS.md</code> zwar automatisch, der eigene ADK-Agent aber nur das, was im Code steht. Eine kleine Funktion <code>lies</code> holt deshalb den Text beim Start aus den Dateien:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>PROJEKT <span class="op">=</span> Path(<span class="va">__file__</span>).resolve().parents[<span class="dv">1</span>]  <span class="co"># Ordner über my_agent</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lies(pfad: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (PROJEKT <span class="op">/</span> pfad).read_text(encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>root_agent <span class="op">=</span> Agent(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">"morgenrot_agent"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span>os.getenv(<span class="st">"GEMINI_MODEL"</span>, <span class="st">"gemini-flash-latest"</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Wertet die Werbekanäle der Rösterei Morgenrot aus."</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    instruction<span class="op">=</span><span class="ss">f"""</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ss">Rolle: Du unterstützt die Gründerinnen der Rösterei Morgenrot</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ss">bei der Auswertung ihrer Werbung.</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ss">Aufgabe: Beantworte Fragen zu den Werbekanälen.</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="ss">Werkzeug: Rechne nie selbst. Rufe für jede Kennzahl das Werkzeug</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="ss">kennzahlen auf.</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ss">Ausgabe: höchstens fünf Sätze, danach eine Tabelle mit den Kennzahlen</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="ss">und die Quelle aus der Rückgabe.</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"kontext/unternehmen.md"</span>)<span class="sc">}</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"kontext/zielgruppe.md"</span>)<span class="sc">}</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="sc">{</span>lies(<span class="st">"AGENTS.md"</span>)<span class="sc">}</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    tools<span class="op">=</span>[kennzahlen],</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Das <code>f</code> vor den Anführungszeichen macht aus dem Text einen f-String: An den Stellen in geschweiften Klammern setzt Python beim Start den Inhalt der Dateien ein. Ändert sich <code>unternehmen.md</code>, genügt ein Neustart von <code>adk web</code>, am Code ändert sich nichts.</p>
+<p>In der <code>AGENTS.md</code> von Morgenrot stehen fünf Regeln, darunter „Nutze nur Fakten aus den Dateien im Ordner kontext und aus den Rückgaben der Werkzeuge“ und „Kennzeichne jede eigene Einschätzung mit ‚Annahme:’“. Die Regel zum Werkzeug steht direkt in der Instruction, weil sie nur für diesen Agenten gilt. <code>tools=[kennzahlen]</code> trägt die Funktion als Werkzeug ein. Ohne diesen Eintrag kennt der Agent sie nicht, auch wenn sie in <code>tools.py</code> steht.</p>
+<p>Die Instruction hat damit vier Teile: Rolle, Aufgabe, Regeln, Ausgabe. „Sei hilfreich“ wäre keine Regel, weil sich nicht prüfen lässt, ob sie eingehalten wurde. „Rechne nie selbst, rufe das Werkzeug auf“ lässt sich dagegen an jedem Lauf prüfen: Entweder taucht der Werkzeugaufruf auf oder nicht. Gute Regeln sind so formuliert, dass eine zweite Person sie ohne Rückfrage abhaken kann.</p>
 </section>
-<section id="starten-und-beobachten" class="level2">
-<h2 class="anchored" data-anchor-id="starten-und-beobachten">Starten und beobachten</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run adk web beispiele</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Das Terminal zeigt eine lokale Adresse, meist <code>http://127.0.0.1:8000</code>. Dort oben links <code>morgenrot_agent</code> wählen und fragen: „Welcher Kanal bringt eine Reservierung günstiger?“ Gestoppt wird der Server im Terminal mit Ctrl + C.</p>
-<p>Die Antwort allein beweist nichts. Links in der Oberfläche steht unter <strong>Events</strong> jeder Schritt des Laufs. Dort lässt sich prüfen, ob <code>kennzahlen</code> aufgerufen wurde, mit welchem Argument und was zurückkam. Erwartet werden zwei Aufrufe, einer je Kanal, und diese Werte:</p>
+<section id="was-beim-start-zu-sehen-ist" class="level2">
+<h2 class="anchored" data-anchor-id="was-beim-start-zu-sehen-ist">Was beim Start zu sehen ist</h2>
+<p>Gestartet wird ein Agent im Projektordner mit <code>uv run adk web</code>. Das Terminal zeigt eine lokale Adresse, meist <code>http://127.0.0.1:8000</code>. Dort wird oben links der Agent gewählt, gestoppt wird der Server im Terminal mit Ctrl + C.</p>
+<p>Die Antwort allein beweist nichts. Links in der Oberfläche steht unter <strong>Events</strong> jeder Schritt des Laufs. Dort lässt sich prüfen, ob das Werkzeug aufgerufen wurde, mit welchem Argument und was zurückkam. Auf die Frage „Welcher Kanal bringt eine Reservierung günstiger?“ ruft der Morgenrot-Agent <code>kennzahlen</code> zweimal auf, einmal je Kanal, und bekommt diese Werte zurück:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 15%">
@@ -337,32 +363,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>Instagram ist je Reservierung knapp günstiger, obwohl die Conversion-Rate dreimal schlechter ist. Der billige Klick gleicht das hier gerade noch aus. Ob aus einer Reservierung ein bezahltes Abo wird, zeigen diese Daten nicht.</p>
 </section>
+<section id="übertragen-auf-das-eigene-unternehmen" class="level2">
+<h2 class="anchored" data-anchor-id="übertragen-auf-das-eigene-unternehmen">Übertragen auf das eigene Unternehmen</h2>
+<p>Der eigene Agent folgt demselben Muster, in drei Aufträgen an den Coding-Agenten. Vor jedem Auftrag lohnt ein Commit, damit sich ein misslungener Schritt zurücknehmen lässt.</p>
+<p><strong>1. Daten.</strong> In den Ordner <code>daten</code> kommt eine Datei <code>kampagne.csv</code> mit einer Zeile je Kanal und diesen Spalten:</p>
+<pre class="text"><code>kanal,kosten_eur,impressionen,klicks,abschluesse
+Newsletter,120,8000,320,24
+Instagram,250,90000,900,30</code></pre>
+<p><code>abschluesse</code> ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Echte Kampagnenzahlen sind bei einem fremden Unternehmen nicht öffentlich. Dann werden plausible Zahlen erfunden, und in <code>kontext/unternehmen.md</code> steht dazu ein Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind erfunden.“</p>
+<p><strong>2. Werkzeug.</strong></p>
+<blockquote class="blockquote">
+<p>Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in my_agent/agent.py unter tools ein. Ändere sonst nichts.</p>
+</blockquote>
+<p><strong>3. Instruction mit Kontext.</strong></p>
+<blockquote class="blockquote">
+<p>Ändere in my_agent/agent.py die Instruction. Sie besteht aus Rolle und Aufgabe für mein Unternehmen aus kontext/unternehmen.md, der Regel „Rechne nie selbst, rufe für jede Kennzahl das Werkzeug kennzahlen auf“ und einem festen Ausgabeformat. Hänge danach mit einer Funktion lies den Inhalt aller Dateien in kontext und der Datei AGENTS.md an, wie im Beispiel mit f-String und Path(<strong>file</strong>).resolve().parents[1]. Ändere sonst nichts.</p>
+</blockquote>
+<p><strong>Prüfpunkt:</strong> Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach <code>uv run adk web</code> starten, <code>my_agent</code> wählen und fragen, wofür das Unternehmen steht. Die Antwort muss Angaben aus <code>unternehmen.md</code> enthalten. Wenn beides stimmt: committen und pushen.</p>
+</section>
 <section id="übung-drei-fragen-drei-beobachtungen" class="level2">
 <h2 class="anchored" data-anchor-id="übung-drei-fragen-drei-beobachtungen">Übung: drei Fragen, drei Beobachtungen</h2>
-<p>Für jede der drei Fragen wird festgehalten: die Frage, ob das Werkzeug aufgerufen wurde und mit welchem Argument, die Antwort und ein Urteil, ob die Antwort zur Rückgabe passt.</p>
+<p>Die Übung läuft mit dem eigenen Agenten. Für jede der drei Fragen wird festgehalten: die Frage, ob das Werkzeug aufgerufen wurde und mit welchem Argument, die Antwort und ein Urteil, ob die Antwort zur Rückgabe passt.</p>
 <ol type="1">
-<li>„Wie hoch ist die Klickrate bei Instagram?“ Erwartet: ein Aufruf mit <code>Instagram</code>, Antwort 0,8 Prozent.</li>
-<li>„Wie läuft TikTok?“ Erwartet: ein Aufruf mit <code>TikTok</code>, die Rückgabe enthält einen Fehler, und der Agent sagt, dass es dazu keine Daten gibt, statt Zahlen zu erfinden.</li>
-<li>„Was wäre der Klickpreis bei Instagram, wenn die Kosten 300 Euro betragen hätten?“ Das Werkzeug kennt nur die tatsächlichen Kosten. Hier zeigt sich, ob der Agent die Regel „Rechne nie selbst“ einhält oder doch im Kopf rechnet.</li>
+<li>Eine Frage nach der Klickrate eines Kanals aus der eigenen CSV. Erwartet: ein Aufruf mit genau diesem Kanal, die Zahl stimmt mit der eigenen Rechnung überein.</li>
+<li>Eine Frage nach einem Kanal, der nicht in der CSV steht, etwa „Wie läuft TikTok?“. Erwartet: Die Rückgabe enthält einen Fehler, und der Agent sagt, dass es dazu keine Daten gibt, statt Zahlen zu erfinden.</li>
+<li>„Was wäre der Klickpreis, wenn die Kosten 300 Euro betragen hätten?“ Das Werkzeug kennt nur die tatsächlichen Kosten. Hier zeigt sich, ob der Agent die Regel „Rechne nie selbst“ einhält oder doch im Kopf rechnet.</li>
 </ol>
-<p><strong>Prüfen:</strong> Jede Beobachtung trennt, was im Event-Protokoll steht, von dem, was in der Antwort behauptet wird. Ein Screenshot einer überzeugenden Antwort ohne Werkzeugaufruf ist kein Beleg. Bei Frage 3 ist beides ein Ergebnis: Hält der Agent sich an die Regel, ist die Instruction stark genug. Rechnet er trotzdem, gehört eine schärfere Regel in die Instruction, etwa „Für hypothetische Zahlen gibt es kein Werkzeug. Sage, dass diese Rechnung nicht möglich ist.“</p>
-</section>
-<section id="übertragen-auf-ein-eigenes-unternehmen" class="level2">
-<h2 class="anchored" data-anchor-id="übertragen-auf-ein-eigenes-unternehmen">Übertragen auf ein eigenes Unternehmen</h2>
-<p>Der eigene Agent folgt demselben Muster. Zuerst kommt eine CSV-Datei mit den Zahlen des eigenen Unternehmens in den Ordner <code>daten</code>, bei einem erfundenen Unternehmen mit dem Vermerk, dass die Zahlen erfunden sind. Danach erhält der Coding-Agent einen Auftrag wie diesen:</p>
-<blockquote class="blockquote">
-<p>Lies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in agent.py unter tools ein. Ändere sonst nichts.</p>
-</blockquote>
-<p>Danach bekommt die Instruction in <code>my_agent/agent.py</code> dieselben vier Teile wie im Beispiel: Rolle und Aufgabe für das eigene Unternehmen, die Regeln „Rechne nie selbst“, „Nutze nur Zahlen aus dem Werkzeug“ und „Kennzeichne Annahmen“, dazu ein festes Ausgabeformat.</p>
-<p><strong>Prüfpunkt:</strong> Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft. Wenn beides stimmt: committen und pushen.</p>
-<p><strong>Hängen geblieben?</strong> Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (Link auf der Kursseite) und bringt die Fehlermeldung mit.</p>
+<p><strong>Prüfen:</strong> Jede Beobachtung trennt, was im Event-Protokoll steht, von dem, was in der Antwort behauptet wird. Ein Screenshot einer überzeugenden Antwort ohne Werkzeugaufruf ist kein Beleg. Bei Frage 3 ist beides ein Ergebnis: Hält der Agent sich an die Regel, ist die Instruction stark genug. Rechnet er trotzdem, gehört eine schärfere Regel in die Instruction, etwa „Für hypothetische Zahlen gibt es kein Werkzeug. Sage, dass diese Rechnung nicht möglich ist.“ Die drei Beobachtungen kommen nach <code>ergebnisse/beobachtungen-kapitel-1.md</code>.</p>
+<p><strong>Hängen geblieben?</strong> Wer 20 Minuten an derselben Stelle feststeckt, bucht einen <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J">Besprechungstermin</a> (15 Minuten, online über Google Meet) und bringt die Fehlermeldung mit.</p>
 </section>
 <section id="häufige-fehler" class="level2">
 <h2 class="anchored" data-anchor-id="häufige-fehler">Häufige Fehler</h2>
-<p><strong>Der Agent erscheint nicht in der Liste.</strong> Im Agentenordner fehlt <code>__init__.py</code>, oder <code>adk web</code> wurde im falschen Ordner gestartet. Der Befehl braucht den Ordner, der die Agentenordner enthält.</p>
+<p><strong>Der Agent erscheint nicht in der Liste.</strong> Im Agentenordner fehlt <code>__init__.py</code>, oder <code>uv run adk web</code> wurde im falschen Ordner gestartet. Das Terminal muss im Projektordner stehen, der <code>my_agent</code> enthält.</p>
 <p><strong>Der Agent ruft das Werkzeug nie auf.</strong> Meist fehlt der Eintrag in <code>tools=[...]</code>, oder der Docstring beschreibt nicht, wofür die Funktion da ist. Eine Regel in der Instruction, die das Werkzeug beim Namen nennt, hilft zusätzlich.</p>
 <p><strong>Fehlermeldung zum API-Schlüssel.</strong> Die Datei <code>.env</code> fehlt, liegt im falschen Ordner oder enthält noch den Platzhalter.</p>
-<p><strong>Die Zahlen stimmen nicht.</strong> Dann liegt der Fehler im Python-Code, nicht beim Modell. Die Funktion lässt sich ohne Modell testen, im Beispiel mit <code>uv run pytest</code>.</p>
+<p><strong>Die Zahlen stimmen nicht.</strong> Dann liegt der Fehler im Python-Code, nicht beim Modell. Die Funktion lässt sich ohne Modell testen: <code>uv run python -c "from my_agent.tools import kennzahlen; print(kennzahlen('Instagram'))"</code>.</p>
+<p><strong><code>KeyError</code> oder Fehler zu einer Variablen beim ersten Chat.</strong> ADK liest Wörter in geschweiften Klammern in der Instruction als Platzhalter. Steht in einer Kontextdatei oder in <code>AGENTS.md</code> etwas wie <code>{Name}</code>, die Klammern entfernen.</p>
+<p><strong><code>FileNotFoundError</code> beim Start.</strong> Der Pfad in <code>lies</code> zeigt auf den falschen Ordner. Bei <code>my_agent/agent.py</code> muss dort <code>parents[1]</code> stehen.</p>
 
 
 </section>

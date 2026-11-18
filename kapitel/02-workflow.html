@@ -176,9 +176,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#agent-oder-workflow" id="toc-agent-oder-workflow" class="nav-link active" data-scroll-target="#agent-oder-workflow">Agent oder Workflow</a></li>
   <li><a href="#knoten-und-kanten" id="toc-knoten-und-kanten" class="nav-link" data-scroll-target="#knoten-und-kanten">Knoten und Kanten</a></li>
-  <li><a href="#starten-und-prüfen" id="toc-starten-und-prüfen" class="nav-link" data-scroll-target="#starten-und-prüfen">Starten und prüfen</a></li>
-  <li><a href="#übung-ein-schritt-mehr" id="toc-übung-ein-schritt-mehr" class="nav-link" data-scroll-target="#übung-ein-schritt-mehr">Übung: ein Schritt mehr</a></li>
+  <li><a href="#was-der-morgenrot-workflow-ausgibt" id="toc-was-der-morgenrot-workflow-ausgibt" class="nav-link" data-scroll-target="#was-der-morgenrot-workflow-ausgibt">Was der Morgenrot-Workflow ausgibt</a></li>
   <li><a href="#übertragen-auf-das-eigene-projekt" id="toc-übertragen-auf-das-eigene-projekt" class="nav-link" data-scroll-target="#übertragen-auf-das-eigene-projekt">Übertragen auf das eigene Projekt</a></li>
+  <li><a href="#übung-ein-schritt-mehr" id="toc-übung-ein-schritt-mehr" class="nav-link" data-scroll-target="#übung-ein-schritt-mehr">Übung: ein Schritt mehr</a></li>
   <li><a href="#häufige-fehler" id="toc-häufige-fehler" class="nav-link" data-scroll-target="#häufige-fehler">Häufige Fehler</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/kirenz/google-adk-2-marketing/blob/main/kapitel/02-workflow.qmd" class="toc-action"><i class="bi bi-github"></i>Quellcode anzeigen</a></li><li><a href="https://github.com/kirenz/google-adk-2-marketing/issues/new" class="toc-action"><i class="bi empty"></i>Problem melden</a></li></ul></div></nav>
@@ -206,7 +206,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Der Agent aus Kapitel 1 entscheidet selbst, ob und wann er das Werkzeug aufruft. Bei einer offenen Frage ist das gewollt. Ein Wochenbericht soll aber jedes Mal gleich entstehen: Daten laden, Kennzahlen rechnen, Tabelle schreiben. Hier soll nichts entscheiden, sondern eine feste Reihenfolge ablaufen. Dafür gibt es in Google ADK 2 den <strong>Workflow</strong>.</p>
-<p><strong>Ziel:</strong> Ein Workflow erzeugt aus <code>daten/kampagne.csv</code> einen Bericht, ohne Modell und ohne API-Schlüssel.</p>
+<p><strong>Ziel:</strong> Ein Workflow im eigenen Projekt erzeugt aus <code>daten/kampagne.csv</code> einen Bericht, ohne Modell und ohne API-Schlüssel.</p>
+<p><strong>Voraussetzung:</strong> Kapitel 1 ist erledigt, <code>my_agent/tools.py</code> enthält ein Werkzeug, das richtig rechnet. Wie in Kapitel 1 wird das Morgenrot-Beispiel gelesen und im eigenen Projekt nachgebaut.</p>
 <section id="agent-oder-workflow" class="level2">
 <h2 class="anchored" data-anchor-id="agent-oder-workflow">Agent oder Workflow</h2>
 <table class="caption-top table">
@@ -265,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Der Code dazu steht in <code>beispiele/morgenrot_workflow/agent.py</code>. Der entscheidende Teil ist eine Zeile:</p>
+<p>Der entscheidende Teil des Morgenrot-Workflows ist eine Zeile:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk <span class="im">import</span> Workflow</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.adk.workflow <span class="im">import</span> START</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -281,35 +282,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>berichten</code> schreibt die Tabelle und nennt den Kanal mit den niedrigsten Kosten je Reservierung. Mit <code>yield Event(message=...)</code> erscheint der Text im Chat.</li>
 </ul>
 </section>
-<section id="starten-und-prüfen" class="level2">
-<h2 class="anchored" data-anchor-id="starten-und-prüfen">Starten und prüfen</h2>
-<p>Der Workflow läuft im Terminal, ganz ohne Schlüssel:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python <span class="at">-m</span> beispiele.laufen</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Erwartet wird diese Ausgabe:</p>
+<section id="was-der-morgenrot-workflow-ausgibt" class="level2">
+<h2 class="anchored" data-anchor-id="was-der-morgenrot-workflow-ausgibt">Was der Morgenrot-Workflow ausgibt</h2>
+<p>Mit den Morgenrot-Zahlen liefert der Workflow diese Ausgabe:</p>
 <pre class="text"><code>| Kanal | CTR | CPC | CR | Kosten je Reservierung |
 |---|---:|---:|---:|---:|
 | Suchanzeigen | 4,00 % | 0,60 € | 12,50 % | 4,80 € |
 | Instagram | 0,80 % | 0,18 € | 4,25 % | 4,24 € |
 
 Günstigster Kanal je Reservierung: Instagram. Quelle: daten/kampagne.csv</code></pre>
-<p>Alternativ erscheint <code>morgenrot_workflow</code> in <code>uv run adk web beispiele</code> neben dem Agenten. Unter <strong>Events</strong> ist dort jeder Knoten mit Eingabe und Ausgabe zu sehen. Ein zweiter Lauf liefert exakt dieselbe Tabelle, und genau das ist der Unterschied zum Agenten.</p>
-</section>
-<section id="übung-ein-schritt-mehr" class="level2">
-<h2 class="anchored" data-anchor-id="übung-ein-schritt-mehr">Übung: ein Schritt mehr</h2>
-<p>Der Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Reservierung kostet. Dafür kommt zwischen <code>rechnen</code> und <code>berichten</code> ein neuer Schritt <code>pruefen</code>, der jedem Kanal ein Feld <code>warnung</code> (wahr oder falsch) hinzufügt. Ein Auftrag an den Coding-Agenten (Antigravity oder Copilot in VS Code) kann so lauten:</p>
-<blockquote class="blockquote">
-<p>Füge in beispiele/morgenrot_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn kosten_je_reservierung_eur größer als 5 ist. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.</p>
-</blockquote>
-<p><strong>Prüfen:</strong> Bei den Morgenrot-Zahlen erscheint keine Warnung, beide Kanäle liegen unter 5 Euro. Zum Test die Grenze vorübergehend auf 4,50 Euro setzen: Dann muss bei Suchanzeigen (4,80 €) eine Warnung erscheinen, bei Instagram (4,24 €) nicht. Danach im Diagramm oben den neuen Knoten ergänzen. Ein Schritt, der in <code>edges</code> fehlt, wird nie ausgeführt, auch wenn die Funktion im Code steht.</p>
+<p>Ein zweiter Lauf liefert exakt dieselbe Tabelle, und genau das ist der Unterschied zum Agenten.</p>
 </section>
 <section id="übertragen-auf-das-eigene-projekt" class="level2">
 <h2 class="anchored" data-anchor-id="übertragen-auf-das-eigene-projekt">Übertragen auf das eigene Projekt</h2>
-<p>Im eigenen Projekt entsteht ein zweiter Ordner neben <code>my_agent</code>, zum Beispiel <code>my_workflow</code>, mit <code>__init__.py</code> und <code>agent.py</code>. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1:</p>
+<p>Im eigenen Projekt entsteht ein zweiter Ordner neben <code>my_agent</code>, nämlich <code>my_workflow</code>. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1. Da der Coding-Agent das Morgenrot-Beispiel nicht sieht, beschreibt der Auftrag das Muster vollständig:</p>
 <blockquote class="blockquote">
-<p>Lege den Ordner my_workflow mit <strong>init</strong>.py und agent.py an. Baue einen ADK-Workflow mit den Schritten laden, rechnen, berichten nach dem Muster aus beispiele/morgenrot_workflow. rechnen nutzt die Funktion aus my_agent/tools.py. berichten gibt eine Tabelle und einen Satz mit der Quelle aus.</p>
+<p>Lege den Ordner my_workflow mit <strong>init</strong>.py und agent.py an. In <strong>init</strong>.py steht <code>from . import agent</code>. Baue in agent.py einen Workflow mit Google ADK 2 aus drei Funktionen: laden liest daten/kampagne.csv und gibt die Zeilen als Liste zurück. rechnen bekommt diese Liste als node_input und ruft für jeden Kanal die Funktion kennzahlen aus my_agent/tools.py auf. berichten bekommt die Ergebnisse als node_input, baut eine Markdown-Tabelle mit allen Kennzahlen und einen Satz mit dem günstigsten Kanal je Abschluss und der Quelle, und gibt den Text mit <code>yield Event(message=text)</code> aus. Am Ende steht <code>root_agent = Workflow(name="my_workflow", edges=[(START, laden, rechnen, berichten)])</code>. Importe: <code>from google.adk import Event, Workflow</code> und <code>from google.adk.workflow import START</code>. Ändere nichts in my_agent.</p>
 </blockquote>
-<p><strong>Prüfpunkt:</strong> <code>uv run adk web .</code> zeigt <code>my_workflow</code>, und zwei Läufe liefern dieselbe Tabelle. Danach committen und pushen.</p>
-<p><strong>Hängen geblieben?</strong> Wer 20 Minuten an derselben Stelle feststeckt, bucht einen Besprechungstermin (Link auf der Kursseite) und bringt die Fehlermeldung mit.</p>
+<p>Gestartet wird wie in Kapitel 1 mit <code>uv run adk web</code>, oben links steht jetzt zusätzlich <code>my_workflow</code>. Eine beliebige Nachricht wie „Bericht“ startet den Lauf. Unter <strong>Events</strong> ist jeder Knoten mit Eingabe und Ausgabe zu sehen.</p>
+<p><strong>Prüfpunkt:</strong> Die Tabelle enthält alle Kanäle aus der eigenen CSV, und die Werte stimmen mit dem Werkzeug aus Kapitel 1 überein. Zwei Läufe liefern dieselbe Tabelle. Danach committen und pushen.</p>
+</section>
+<section id="übung-ein-schritt-mehr" class="level2">
+<h2 class="anchored" data-anchor-id="übung-ein-schritt-mehr">Übung: ein Schritt mehr</h2>
+<p>Der Bericht soll zusätzlich eine Warnung ausgeben, wenn ein Kanal mehr als 5 Euro je Abschluss kostet. Dafür kommt zwischen <code>rechnen</code> und <code>berichten</code> ein neuer Schritt <code>pruefen</code>, der jedem Kanal ein Feld <code>warnung</code> (wahr oder falsch) hinzufügt. Ein Auftrag an den Coding-Agenten (Antigravity oder Copilot in VS Code) kann so lauten:</p>
+<blockquote class="blockquote">
+<p>Füge in my_workflow/agent.py zwischen rechnen und berichten einen Schritt pruefen ein. Er ergänzt bei jedem Kanal das Feld warnung, das wahr ist, wenn die Kosten je Abschluss größer als 5 Euro sind. berichten schreibt bei warnung ein „Achtung“ hinter den Kanal. Trage pruefen in edges ein. Ändere sonst nichts.</p>
+</blockquote>
+<p><strong>Prüfen:</strong> Die Grenze so wählen, dass genau ein Kanal darüber liegt, zum Beispiel vorübergehend knapp unter dem teuersten Kanal. Dann muss genau bei diesem Kanal „Achtung“ erscheinen. Danach die Grenze auf 5 Euro zurücksetzen. Ein Schritt, der in <code>edges</code> fehlt, wird nie ausgeführt, auch wenn die Funktion im Code steht.</p>
+<p><strong>Hängen geblieben?</strong> Wer 20 Minuten an derselben Stelle feststeckt, bucht einen <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J">Besprechungstermin</a> (15 Minuten, online über Google Meet) und bringt die Fehlermeldung mit.</p>
 </section>
 <section id="häufige-fehler" class="level2">
 <h2 class="anchored" data-anchor-id="häufige-fehler">Häufige Fehler</h2>
