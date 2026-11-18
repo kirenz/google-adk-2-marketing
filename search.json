@@ -1,0 +1,122 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Google ADK 2 im Marketing",
+    "section": "",
+    "text": "Worum es geht\nEin Sprachmodell schreibt gute Texte, rechnet aber unzuverlässig und kennt die Zahlen eines Unternehmens nicht. Ein Agent schließt diese Lücke. Er verbindet das Modell mit Regeln (der Instruction) und mit Werkzeugen, also Python-Funktionen, die Daten lesen und rechnen. Das Modell entscheidet, wann ein Werkzeug gebraucht wird. Gerechnet wird in Python.\nDieses Buch baut solche Agenten mit Google ADK 2, dem Agent Development Kit von Google, Schritt für Schritt an einem Marketingfall. Jedes Kapitel hat ein lauffähiges Beispiel und eine Übung, die das Beispiel auf ein eigenes Unternehmen überträgt. Programmierkenntnisse sind keine Voraussetzung: Den Code schreibt ein Coding-Agent wie Antigravity, die Aufgabe ist, ihn zu verstehen, Aufträge zu geben und Ergebnisse zu prüfen.",
+    "crumbs": [
+      "Worum es geht"
+    ]
+  },
+  {
+    "objectID": "index.html#der-fall-rösterei-morgenrot",
+    "href": "index.html#der-fall-rösterei-morgenrot",
+    "title": "Google ADK 2 im Marketing",
+    "section": "Der Fall: Rösterei Morgenrot",
+    "text": "Der Fall: Rösterei Morgenrot\nZwei Gründerinnen verkaufen frisch gerösteten Kaffee im Abo, eine Lieferung kostet 27 Euro. Vor dem Start haben sie sechs Wochen lang Suchanzeigen und Instagram getestet. Die Zahlen liegen in daten/kampagne.csv und sind erfunden.\n\n\n\nKanal\nKosten\nImpressionen\nKlicks\nReservierungen\n\n\n\n\nSuchanzeigen\n384 €\n16.000\n640\n80\n\n\nInstagram\n216 €\n150.000\n1.200\n51\n\n\n\nDie Gründerin hält Instagram für den besseren Kanal, weil der Klick nur 0,18 Euro kostet. Die Mitgründerin will Zahlen sehen, bevor mehr Geld fließt. Der Agent in diesem Buch hilft bei genau dieser Frage.",
+    "crumbs": [
+      "Worum es geht"
+    ]
+  },
+  {
+    "objectID": "index.html#die-kapitel",
+    "href": "index.html#die-kapitel",
+    "title": "Google ADK 2 im Marketing",
+    "section": "Die Kapitel",
+    "text": "Die Kapitel\n\n\n\nKapitel\nInhalt\nStand\n\n\n\n\n1\nDer erste Agent mit einem Werkzeug\nfertig\n\n\n2\nEin Workflow aus festen Schritten\nfolgt\n\n\n3\nDer Agent als App mit Gradio\nfolgt\n\n\n4\nErgebnisse prüfen\nfolgt",
+    "crumbs": [
+      "Worum es geht"
+    ]
+  },
+  {
+    "objectID": "index.html#start",
+    "href": "index.html#start",
+    "title": "Google ADK 2 im Marketing",
+    "section": "Start",
+    "text": "Start\nVoraussetzungen sind uv, Git und ein eigener Gemini-API-Schlüssel aus Google AI Studio. Alle Befehle laufen im Ordner des Repositorys:\ngit clone https://github.com/kirenz/google-adk-2-marketing.git\ncd google-adk-2-marketing\nuv sync\ncp .env.example .env\nIn der Datei .env ersetzt der eigene Schlüssel den Platzhalter. Die Datei steht in .gitignore und gehört nie in ein Repository. uv run pytest prüft danach ohne Schlüssel, ob die Werkzeuge richtig rechnen.\nDas Buch nutzt google-adk 2.13.0 und Python 3.13, beides legt uv.lock fest. Eine englische, technisch ausführlichere Fassung mit einem BI-Fall ist Google ADK 2.",
+    "crumbs": [
+      "Worum es geht"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html",
+    "href": "kapitel/01-erster-agent.html",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "",
+    "text": "Drei Teile eines Agenten\nDie Gründerinnen von Morgenrot wollen wissen, welcher Kanal eine Reservierung günstiger bringt. Ein Chat mit einem Sprachmodell würde die Kennzahlen aus der Tabelle abschreiben und im Kopf rechnen, mal richtig, mal knapp daneben. Der Agent in diesem Kapitel rechnet nicht selbst. Er ruft eine Python-Funktion auf, die die Datei liest und die Kennzahlen berechnet, und formuliert aus dem Ergebnis die Antwort.\nEin Agent in Google ADK besteht aus drei Teilen. Das Modell (hier Gemini) versteht die Frage und schreibt die Antwort. Die Instruction legt fest, welche Rolle der Agent hat, welche Regeln gelten und wie die Ausgabe aussieht. Die Werkzeuge sind Python-Funktionen, die der Agent aufrufen darf.\nflowchart LR\n  F[\"Frage&lt;br/&gt;Was kostet eine Reservierung&lt;br/&gt;über Instagram?\"] --&gt; M[\"Modell&lt;br/&gt;entscheidet: Werkzeug nötig\"]\n  M --&gt; W[\"Werkzeug kennzahlen&lt;br/&gt;liest daten/kampagne.csv&lt;br/&gt;und rechnet\"]\n  W --&gt; M2[\"Modell&lt;br/&gt;formuliert die Antwort&lt;br/&gt;aus der Rückgabe\"]\n  M2 --&gt; A[\"Antwort mit Tabelle&lt;br/&gt;und Quelle\"]\nWichtig ist die Arbeitsteilung: Das Modell entscheidet, ob und mit welchem Argument ein Werkzeug aufgerufen wird. Was dabei herauskommt, bestimmt allein der Python-Code. Eine falsche Formel im Werkzeug liefert also zuverlässig falsche Zahlen, und eine gute Instruction rettet das nicht.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#der-projektordner",
+    "href": "kapitel/01-erster-agent.html#der-projektordner",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Der Projektordner",
+    "text": "Der Projektordner\ngoogle-adk-2-marketing/\n├── .env                     API-Schlüssel, nie committen\n├── daten/\n│   └── kampagne.csv         Kosten, Impressionen, Klicks, Reservierungen je Kanal\n└── beispiele/\n    └── morgenrot_agent/\n        ├── __init__.py      macht den Ordner für ADK auffindbar\n        ├── agent.py         root_agent mit Instruction und Werkzeugen\n        └── tools.py         die Werkzeuge als Python-Funktionen\nADK sucht in jedem Unterordner von beispiele nach einer Variablen root_agent. Der Ordnername ist der Name, unter dem der Agent später in der Oberfläche erscheint. Fehlt __init__.py, taucht der Agent dort nicht auf.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#das-werkzeug-eine-funktion-mit-beschreibung",
+    "href": "kapitel/01-erster-agent.html#das-werkzeug-eine-funktion-mit-beschreibung",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Das Werkzeug: eine Funktion mit Beschreibung",
+    "text": "Das Werkzeug: eine Funktion mit Beschreibung\nEin Werkzeug ist eine gewöhnliche Python-Funktion. Das Modell sieht ihren Code nicht. Es sieht nur den Namen, die Parameter mit ihren Typen und den Docstring, also den Text in den dreifachen Anführungszeichen. Daraus schließt es, wann die Funktion passt und welches Argument sie braucht. Der Docstring ist deshalb kein Kommentar für Menschen, sondern die Bedienungsanleitung für das Modell.\ndef kennzahlen(kanal: str) -&gt; dict:\n    \"\"\"Berechnet die Kennzahlen eines Werbekanals aus daten/kampagne.csv.\n\n    Args:\n        kanal: Name des Kanals, genau wie in der Spalte kanal,\n            z. B. \"Suchanzeigen\" oder \"Instagram\".\n\n    Returns:\n        Ein Dictionary mit Klickrate (CTR) und Conversion-Rate in Prozent,\n        Klickpreis (CPC) und Kosten je Reservierung in Euro. Ist der Kanal\n        unbekannt, enthält es den Schlüssel \"fehler\" und die Liste der\n        vorhandenen Kanäle.\n    \"\"\"\nDer Rumpf der Funktion liest die Zeile des Kanals und rechnet mit den bekannten Formeln: Klickrate = Klicks ÷ Impressionen, Klickpreis = Kosten ÷ Klicks, Conversion-Rate = Reservierungen ÷ Klicks, Kosten je Reservierung = Kosten ÷ Reservierungen. Zurück kommt ein Dictionary mit den Werten und der Quelle. Für einen unbekannten Kanal gibt die Funktion keine erfundene Zahl zurück, sondern eine Fehlermeldung mit den vorhandenen Kanälen. So kann der Agent nachfragen, statt zu raten. Der vollständige Code steht in beispiele/morgenrot_agent/tools.py.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#der-agent-instruction-als-prüfbare-regeln",
+    "href": "kapitel/01-erster-agent.html#der-agent-instruction-als-prüfbare-regeln",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Der Agent: Instruction als prüfbare Regeln",
+    "text": "Der Agent: Instruction als prüfbare Regeln\nroot_agent = Agent(\n    name=\"morgenrot_agent\",\n    model=os.getenv(\"GEMINI_MODEL\", \"gemini-flash-latest\"),\n    description=\"Wertet die Werbekanäle der Rösterei Morgenrot aus.\",\n    instruction=\"\"\"\nRolle: Du unterstützt die Gründerinnen der Rösterei Morgenrot\n(Kaffee-Abo, 27 Euro je Lieferung) bei der Auswertung ihrer Werbung.\nAufgabe: Beantworte Fragen zu den Kanälen Suchanzeigen und Instagram.\nRegeln:\n- Rechne nie selbst. Rufe für jede Kennzahl das Werkzeug kennzahlen auf.\n- Nutze nur Zahlen aus der Rückgabe des Werkzeugs. Fehlt eine Zahl, sage das.\n- Kennzeichne jede eigene Einschätzung mit „Annahme:“.\nAusgabe: höchstens fünf Sätze, danach eine Tabelle mit den Kennzahlen\nund die Quelle aus der Rückgabe.\n\"\"\",\n    tools=[kennzahlen],\n)\ntools=[kennzahlen] trägt die Funktion als Werkzeug ein. Ohne diesen Eintrag kennt der Agent sie nicht, auch wenn sie in tools.py steht.\nDie Instruction hat vier Teile: Rolle, Aufgabe, Regeln, Ausgabe. „Sei hilfreich“ wäre keine Regel, weil sich nicht prüfen lässt, ob sie eingehalten wurde. „Rechne nie selbst, rufe das Werkzeug auf“ lässt sich dagegen an jedem Lauf prüfen: Entweder taucht der Werkzeugaufruf auf oder nicht. Gute Regeln sind so formuliert, dass eine zweite Person sie ohne Rückfrage abhaken kann.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#starten-und-beobachten",
+    "href": "kapitel/01-erster-agent.html#starten-und-beobachten",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Starten und beobachten",
+    "text": "Starten und beobachten\nuv run adk web beispiele\nDas Terminal zeigt eine lokale Adresse, meist http://127.0.0.1:8000. Dort oben links morgenrot_agent wählen und fragen: „Welcher Kanal bringt eine Reservierung günstiger?“ Gestoppt wird der Server im Terminal mit Ctrl + C.\nDie Antwort allein beweist nichts. Links in der Oberfläche steht unter Events jeder Schritt des Laufs. Dort lässt sich prüfen, ob kennzahlen aufgerufen wurde, mit welchem Argument und was zurückkam. Erwartet werden zwei Aufrufe, einer je Kanal, und diese Werte:\n\n\n\n\n\n\n\n\n\n\nKanal\nKlickrate\nKlickpreis\nConversion-Rate\nKosten je Reservierung\n\n\n\n\nSuchanzeigen\n4,0 %\n0,60 €\n12,5 %\n4,80 €\n\n\nInstagram\n0,8 %\n0,18 €\n4,25 %\n4,24 €\n\n\n\nInstagram ist je Reservierung knapp günstiger, obwohl die Conversion-Rate dreimal schlechter ist. Der billige Klick gleicht das hier gerade noch aus. Ob aus einer Reservierung ein bezahltes Abo wird, zeigen diese Daten nicht.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#übung-drei-fragen-drei-beobachtungen",
+    "href": "kapitel/01-erster-agent.html#übung-drei-fragen-drei-beobachtungen",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Übung: drei Fragen, drei Beobachtungen",
+    "text": "Übung: drei Fragen, drei Beobachtungen\nFür jede der drei Fragen wird festgehalten: die Frage, ob das Werkzeug aufgerufen wurde und mit welchem Argument, die Antwort und ein Urteil, ob die Antwort zur Rückgabe passt.\n\n„Wie hoch ist die Klickrate bei Instagram?“ Erwartet: ein Aufruf mit Instagram, Antwort 0,8 Prozent.\n„Wie läuft TikTok?“ Erwartet: ein Aufruf mit TikTok, die Rückgabe enthält einen Fehler, und der Agent sagt, dass es dazu keine Daten gibt, statt Zahlen zu erfinden.\n„Was wäre der Klickpreis bei Instagram, wenn die Kosten 300 Euro betragen hätten?“ Das Werkzeug kennt nur die tatsächlichen Kosten. Hier zeigt sich, ob der Agent die Regel „Rechne nie selbst“ einhält oder doch im Kopf rechnet.\n\nPrüfen: Jede Beobachtung trennt, was im Event-Protokoll steht, von dem, was in der Antwort behauptet wird. Ein Screenshot einer überzeugenden Antwort ohne Werkzeugaufruf ist kein Beleg. Bei Frage 3 ist beides ein Ergebnis: Hält der Agent sich an die Regel, ist die Instruction stark genug. Rechnet er trotzdem, gehört eine schärfere Regel in die Instruction, etwa „Für hypothetische Zahlen gibt es kein Werkzeug. Sage, dass diese Rechnung nicht möglich ist.“",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#übertragen-auf-ein-eigenes-unternehmen",
+    "href": "kapitel/01-erster-agent.html#übertragen-auf-ein-eigenes-unternehmen",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Übertragen auf ein eigenes Unternehmen",
+    "text": "Übertragen auf ein eigenes Unternehmen\nDer eigene Agent folgt demselben Muster. Zuerst kommt eine CSV-Datei mit den Zahlen des eigenen Unternehmens in den Ordner daten, bei einem erfundenen Unternehmen mit dem Vermerk, dass die Zahlen erfunden sind. Danach erhält der Coding-Agent einen Auftrag wie diesen:\n\nLies daten/kampagne.csv. Schreibe in my_agent/tools.py eine Funktion kennzahlen(kanal: str), die Klickrate, Klickpreis, Conversion-Rate und Kosten je Abschluss berechnet. Gib ein Dictionary zurück, bei unbekanntem Kanal eine Fehlermeldung mit den vorhandenen Kanälen. Schreibe einen Docstring, der Eingabe und Rückgabe erklärt. Trage die Funktion in agent.py unter tools ein. Ändere sonst nichts.\n\nPrüfen: Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach im Event-Protokoll nachsehen, ob der Agent das Werkzeug bei einer passenden Frage tatsächlich aufruft.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  },
+  {
+    "objectID": "kapitel/01-erster-agent.html#häufige-fehler",
+    "href": "kapitel/01-erster-agent.html#häufige-fehler",
+    "title": "Der erste Agent mit einem Werkzeug",
+    "section": "Häufige Fehler",
+    "text": "Häufige Fehler\nDer Agent erscheint nicht in der Liste. Im Agentenordner fehlt __init__.py, oder adk web wurde im falschen Ordner gestartet. Der Befehl braucht den Ordner, der die Agentenordner enthält.\nDer Agent ruft das Werkzeug nie auf. Meist fehlt der Eintrag in tools=[...], oder der Docstring beschreibt nicht, wofür die Funktion da ist. Eine Regel in der Instruction, die das Werkzeug beim Namen nennt, hilft zusätzlich.\nFehlermeldung zum API-Schlüssel. Die Datei .env fehlt, liegt im falschen Ordner oder enthält noch den Platzhalter.\nDie Zahlen stimmen nicht. Dann liegt der Fehler im Python-Code, nicht beim Modell. Die Funktion lässt sich ohne Modell testen, im Beispiel mit uv run pytest.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der erste Agent mit einem Werkzeug</span>"
+    ]
+  }
+]
