@@ -139,7 +139,7 @@ Newsletter,120,8000,320,24
 Instagram,250,90000,900,30
 ```
 
-`abschluesse` ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Echte Kampagnenzahlen sind bei einem fremden Unternehmen nicht öffentlich. Dann werden plausible Zahlen erfunden, und in `kontext/unternehmen.md` steht dazu ein Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind erfunden.“
+`abschluesse` ist das, was für das eigene Unternehmen zählt, etwa Buchungen, Anmeldungen oder Bestellungen. Für das zweite Werkzeug im Kurs (ROAS, also Umsatz ÷ Werbekosten) kommt später eine Spalte `umsatz_eur` dazu. Wer mag, legt sie schon jetzt an, das Werkzeug aus diesem Kapitel ignoriert sie. Echte Kampagnenzahlen sind bei einem fremden Unternehmen nicht öffentlich. Dann werden plausible Zahlen erfunden, und in `kontext/unternehmen.md` steht dazu ein Satz wie „Annahme: Die Zahlen in daten/kampagne.csv sind erfunden.“
 
 **2. Werkzeug.**
 
