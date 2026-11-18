@@ -147,9 +147,9 @@ Instagram,250,90000,900,30
 
 **3. Instruction mit Kontext.**
 
-> Ändere in my_agent/agent.py die Instruction. Sie besteht aus Rolle und Aufgabe für mein Unternehmen aus kontext/unternehmen.md, der Regel „Rechne nie selbst, rufe für jede Kennzahl das Werkzeug kennzahlen auf“ und einem festen Ausgabeformat. Hänge danach mit einer Funktion lies den Inhalt aller Dateien in kontext und der Datei AGENTS.md an, wie im Beispiel mit f-String und Path(__file__).resolve().parents[1]. Ändere sonst nichts.
+> Ändere in my_agent/agent.py die Instruction. Sie besteht aus Rolle und Aufgabe für mein Unternehmen aus kontext/unternehmen.md, der Regel „Rechne nie selbst, rufe für jede Kennzahl das Werkzeug kennzahlen auf“, den Regeln „Nutze nur Fakten aus dem Kontext und aus den Rückgaben der Werkzeuge“ und „Kennzeichne Annahmen mit ‚Annahme:‘“ und einem festen Ausgabeformat. Hänge danach mit einer Funktion lies den Inhalt aller Dateien in kontext und der Datei AGENTS.md an, wie im Beispiel mit f-String und Path(__file__).resolve().parents[1]. Ändere sonst nichts.
 
-**Prüfpunkt:** Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach `uv run adk web` starten, `my_agent` wählen und fragen, wofür das Unternehmen steht. Die Antwort muss Angaben aus `unternehmen.md` enthalten. Wenn beides stimmt: committen und pushen.
+**Prüfpunkt:** Einen Wert aus der CSV von Hand nachrechnen und mit dem Ergebnis des Werkzeugs vergleichen. Stimmt die Formel? Stimmt die Einheit (Prozent oder Euro)? Danach `uv run adk web` starten, `my_agent` wählen und fragen, wofür das Unternehmen steht. Die Antwort muss Angaben aus `unternehmen.md` enthalten. In der Instruction stehen die beiden Regeln zu Fakten und Annahmen, sie zählen in der Bewertung des Kurses (Kriterium A2). Wenn alles stimmt: committen und pushen.
 
 ## Übung: drei Fragen, drei Beobachtungen
 
@@ -159,7 +159,7 @@ Die Übung läuft mit dem eigenen Agenten. Für jede der drei Fragen wird festge
 2. Eine Frage nach einem Kanal, der nicht in der CSV steht, etwa „Wie läuft TikTok?“. Erwartet: Die Rückgabe enthält einen Fehler, und der Agent sagt, dass es dazu keine Daten gibt, statt Zahlen zu erfinden.
 3. „Was wäre der Klickpreis, wenn die Kosten 300 Euro betragen hätten?“ Das Werkzeug kennt nur die tatsächlichen Kosten. Hier zeigt sich, ob der Agent die Regel „Rechne nie selbst“ einhält oder doch im Kopf rechnet.
 
-**Prüfen:** Jede Beobachtung trennt, was im Event-Protokoll steht, von dem, was in der Antwort behauptet wird. Ein Screenshot einer überzeugenden Antwort ohne Werkzeugaufruf ist kein Beleg. Bei Frage 3 ist beides ein Ergebnis: Hält der Agent sich an die Regel, ist die Instruction stark genug. Rechnet er trotzdem, gehört eine schärfere Regel in die Instruction, etwa „Für hypothetische Zahlen gibt es kein Werkzeug. Sage, dass diese Rechnung nicht möglich ist.“ Die drei Beobachtungen kommen nach `ergebnisse/beobachtungen-kapitel-1.md`.
+**Prüfen:** Jede Beobachtung trennt, was im Event-Protokoll steht, von dem, was in der Antwort behauptet wird. Ein Screenshot einer überzeugenden Antwort ohne Werkzeugaufruf ist kein Beleg. Bei Frage 3 ist beides ein Ergebnis: Hält der Agent sich an die Regel, ist die Instruction stark genug. Rechnet er trotzdem, gehört eine schärfere Regel in die Instruction, etwa „Für hypothetische Zahlen gibt es kein Werkzeug. Sage, dass diese Rechnung nicht möglich ist.“ Die drei Beobachtungen kommen nach `ergebnisse/beobachtungen-kapitel-1.md`. Sie sind eine Übung und ersetzen nicht die drei Läufe `lauf-1.md` bis `lauf-3.md` mit Prüfprotokoll, die am Ende des Projekts für die Bewertung entstehen.
 
 **Hängen geblieben?** Wer 20 Minuten an derselben Stelle feststeckt, bucht einen [Besprechungstermin](https://calendar.google.com/calendar/appointments/schedules/AcZssZ0-Br2i3czDONX0VmA8fOW7ttU9xKOCCrxyWJr2KItZ9CI-EB-2F3IUIAyhdoL97wEMHfzMft3J) (15 Minuten, online über Google Meet) und bringt die Fehlermeldung mit.
 
