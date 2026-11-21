@@ -124,7 +124,7 @@ Ein zweiter Lauf liefert exakt dieselbe Tabelle, und genau das ist der Unterschi
 Im eigenen Projekt entsteht ein zweiter Ordner neben `my_agent`, nämlich `my_workflow`. Der Workflow nutzt die eigene CSV-Datei und das eigene Werkzeug aus Kapitel 1. Danach sieht der Projektordner so aus:
 
 ```text
-mein-projekt/
+gwa26-agent-<nachname>/
 ├── my_agent/
 │   ├── __init__.py
 │   ├── agent.py
